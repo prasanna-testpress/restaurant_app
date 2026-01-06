@@ -1,0 +1,50 @@
+{% extends 'base_auth.html' %}
+
+{% block title %}Create Account - Tasty Bites
+{% endblock %}
+
+{% block content %}
+    <h2>Create Account</h2>
+    <p class="subtitle">Join us to book tables easily and get exclusive food offers.</p>
+
+    {% if form.non_field_errors %}
+        <div class="non-field-errors">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <form method="post" novalidate="novalidate">
+        {% csrf_token %}
+
+        <p>
+            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                {{ form.email.errors }}
+            {% endif %}
+        </p>
+
+        <p>
+            <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+                {{ form.password1.errors }}
+            {% endif %}
+        </p>
+
+        <p>
+            <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                {{ form.password2.errors }}
+            {% endif %}
+        </p>
+
+        <button type="submit">Create Account</button>
+    </form>
+
+    <a href="{% url 'login' %}" class="auth-link">
+        Already have an account?
+        <strong>Log In</strong>
+    </a>
+{% endblock %}
