@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
 
@@ -10,7 +11,7 @@ def signup_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect("/")
+            return redirect(settings.LOGIN_REDIRECT_URL)
     else:
         form = SignupForm()
 
@@ -23,7 +24,7 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect("/")
+            return redirect(settings.LOGIN_REDIRECT_URL)
     else:
         form = LoginForm()
 
