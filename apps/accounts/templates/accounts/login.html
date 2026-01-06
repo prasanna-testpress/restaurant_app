@@ -1,0 +1,43 @@
+{% extends 'base_auth.html' %}
+
+{% block title %}Welcome Back - Tasty Bites
+{% endblock %}
+
+{% block background_image %}style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop');"
+{% endblock %}
+
+{% block content %}
+    <h2>Welcome Back!</h2>
+    {% if form.non_field_errors %}
+        <div class="non-field-errors">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <form method="post" novalidate="novalidate">
+        {% csrf_token %}
+
+        <p>
+            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                {{ form.email.errors }}
+            {% endif %}
+        </p>
+
+        <p>
+            <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+            {{ form.password }}
+            {% if form.password.errors %}
+                {{ form.password.errors }}
+            {% endif %}
+        </p>
+
+        <button type="submit">Sign In</button>
+    </form>
+
+    <a href="{% url 'signup' %}" class="auth-link">
+        New to Tasty Bites?
+        <strong>Create Account</strong>
+    </a>
+{% endblock %}
