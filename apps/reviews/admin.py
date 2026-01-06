@@ -7,4 +7,4 @@ from .models import Review
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ["user", "restaurant", "rating", "created_at"]
     list_filter = ["rating"]
-    search_fields = ["user__username", "restaurant__name"]
+    search_fields = ["user__email", "restaurant__name"]
