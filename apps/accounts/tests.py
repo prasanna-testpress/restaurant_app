@@ -4,6 +4,8 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+TEST_PASSWORD = "test-password"
+
 
 class AuthenticationTests(TestCase):
 
@@ -12,8 +14,8 @@ class AuthenticationTests(TestCase):
             reverse("signup"),
             {
                 "email": "user@example.com",
-                "password1": "StrongPass123!",
-                "password2": "StrongPass123!",
+                "password1": TEST_PASSWORD,
+                "password2": TEST_PASSWORD,
             },
         )
         self.assertEqual(response.status_code, 302)
@@ -22,13 +24,13 @@ class AuthenticationTests(TestCase):
     def test_login(self):
         User.objects.create_user(
             email="login@example.com",
-            password="StrongPass123!",
+            password=TEST_PASSWORD,
         )
         response = self.client.post(
             reverse("login"),
             {
                 "email": "login@example.com",
-                "password": "StrongPass123!",
+                "password": TEST_PASSWORD,
             },
         )
         self.assertEqual(response.status_code, 302)
@@ -36,13 +38,13 @@ class AuthenticationTests(TestCase):
     def test_login_with_wrong_password(self):
         User.objects.create_user(
             email="wrong@example.com",
-            password="CorrectPass123!",
+            password=TEST_PASSWORD,
         )
         response = self.client.post(
             reverse("login"),
             {
                 "email": "wrong@example.com",
-                "password": "WrongPass123!",
+                "password": "invalid-password",
             },
         )
         self.assertEqual(response.status_code, 200)
@@ -53,8 +55,8 @@ class AuthenticationTests(TestCase):
             reverse("signup"),
             {
                 "email": "mismatch@example.com",
-                "password1": "Pass123!",
-                "password2": "DifferentPass123!",
+                "password1": TEST_PASSWORD,
+                "password2": "different-password",
             },
         )
         self.assertEqual(response.status_code, 200)
