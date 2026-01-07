@@ -27,8 +27,35 @@ class AuthenticationTests(TestCase):
         response = self.client.post(
             reverse("login"),
             {
-                "email": "login@example.com",  # Changed from "username"
+                "email": "login@example.com",
                 "password": "StrongPass123!",
             },
         )
-        self.assertEqual(response.status_code, 302)  # Changed from 200
+        self.assertEqual(response.status_code, 302)
+
+    def test_login_with_wrong_password(self):
+        User.objects.create_user(
+            email="wrong@example.com",
+            password="CorrectPass123!",
+        )
+        response = self.client.post(
+            reverse("login"),
+            {
+                "email": "wrong@example.com",
+                "password": "WrongPass123!",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Invalid email or password")
+
+    def test_signup_password_mismatch(self):
+        response = self.client.post(
+            reverse("signup"),
+            {
+                "email": "mismatch@example.com",
+                "password1": "Pass123!",
+                "password2": "DifferentPass123!",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Passwords do not match")
