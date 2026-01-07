@@ -1,27 +1,162 @@
-<h1>Restaurants</h1>
+{% extends "base.html" %}
+{% load static %}
 
-<ul>
-  {% for restaurant in restaurants %}
-    <li>
-      <strong>{{ restaurant.name }}</strong>
-      – {{ restaurant.city }}
-      – ₹{{ restaurant.cost_for_two }}
-    </li>
-  {% empty %}
-    <li>No restaurants found.</li>
-  {% endfor %}
-</ul>
+{% block title %}Find Restaurants – Tasty Bites{% endblock %}
 
-{% if is_paginated %}
-  <div>
-    {% if page_obj.has_previous %}
-      <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-    {% endif %}
+{% block content %}
 
-    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+<section class="hero-small">
+    <div class="container">
+        <h1>Order Food Online</h1>
+        <p>Best food in {{ request.GET.city|default:"your city" }}</p>
+    </div>
+</section>
 
-    {% if page_obj.has_next %}
-      <a href="?page={{ page_obj.next_page_number }}">Next</a>
-    {% endif %}
-  </div>
-{% endif %}
+<div class="container layout-wrapper">
+
+    <!-- Filters -->
+    <aside class="filter-sidebar">
+        <div class="filter-header">
+            <h3>Filters</h3>
+            <a href="{% url 'restaurants:restaurant_list' %}" class="clear-btn">
+                Clear all
+            </a>
+        </div>
+
+        <form method="get">
+
+            <!-- City -->
+            <div class="filter-group">
+                <label>City</label>
+                <input list="city_list" name="city" class="search-input" value="{{ request.GET.city|default:'' }}"
+                    placeholder="Type to search city…">
+                <datalist id="city_list">
+                    {% for city in cities %}
+                    <option value="{{ city }}">
+                        {% endfor %}
+                </datalist>
+            </div>
+
+            <!-- Cuisine -->
+            <div class="filter-group">
+                <label>Cuisine</label>
+                <input list="cuisine_list" name="cuisine" class="search-input"
+                    value="{{ request.GET.cuisine|default:'' }}" placeholder="e.g. Italian, Chinese…">
+                <datalist id="cuisine_list">
+                    {% for cuisine in cuisines %}
+                    <option value="{{ cuisine }}">
+                        {% endfor %}
+                </datalist>
+            </div>
+
+            <!-- Veg Type -->
+            <div class="filter-group">
+                <label>Dietary</label>
+
+                <div class="radio-option">
+                    <input type="radio" name="veg_type" value="" {% if not request.GET.veg_type %}checked{% endif %}>
+                    <label>All</label>
+                </div>
+
+                <div class="radio-option">
+                    <input type="radio" name="veg_type" value="veg" {% if request.GET.veg_type  ==  "veg" %}checked="checked" {% endif %}>
+                    <label>Veg</label>
+                </div>
+
+                <div class="radio-option">
+                    <input type="radio" name="veg_type" value="non_veg" {% if request.GET.veg_type  ==  "non_veg" %}checked="checked" {% endif %}>
+                    <label>Non-Veg</label>
+                </div>
+
+                <div class="radio-option">
+                    <input type="radio" name="veg_type" value="vegan" {% if request.GET.veg_type  ==  "vegan" %}checked{% endif %}>
+                    <label>Vegan</label>
+                </div>
+            </div>
+
+            <!-- Open Only -->
+            <div class="filter-group checkbox-group">
+                <input type="checkbox" name="is_open" value="true" {% if request.GET.is_open == "true" %}checked {% endif %}>
+                <label>Show Open Only</label>
+            </div>
+
+            <!-- Sort -->
+            <div class="filter-group">
+                <label>Sort By</label>
+                <select name="sort">
+                    <option value="">Default</option>
+                    <option value="cost_low" {% if request.GET.sort == "cost_low" %}selected{% endif %}>
+                        Cost: Low to High
+                    </option>
+                    <option value="cost_high" {% if request.GET.sort == "cost_high" %}selected{% endif %}>
+                        Cost: High to Low
+                    </option>
+                </select>
+            </div>
+
+            <button type="submit" class="apply-btn">Apply</button>
+        </form>
+    </aside>
+
+    <!-- Results -->
+    <main class="content-area">
+
+        <div class="results-meta">
+            Showing {{ page_obj.paginator.count }} restaurants
+        </div>
+
+        <div class="restaurant-grid">
+            {% for restaurant in restaurants %}
+            <div class="card">
+                <img src="{% static 'images/default-food.jpg' %}" class="card-img">
+
+                <div class="card-body">
+                    <div class="card-header-row">
+                       <span class="rating-badge">★</span>
+                    </div>
+
+                    <div class="card-meta">
+                        <span>
+                            {% for cuisine in restaurant.cuisines.all %}
+                                {{ cuisine.name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                            • {{ restaurant.city }}
+                        </span>
+                        <span class="price">₹{{ restaurant.cost_for_two }} for two</span>
+                    </div>
+
+                    <a href="#" class="view-btn">View Menu</a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <h3>No matches found 😕</h3>
+                <p>Try clearing your filters to see more results.</p>
+                <a href="{% url 'restaurants:restaurant_list' %}" class="btn-text">Reset Filters</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&{{ query_params.urlencode }}">
+                ← Prev
+            </a>
+            {% endif %}
+
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&{{ query_params.urlencode }}">
+                Next →
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    </main>
+</div>
+
+{% endblock %}

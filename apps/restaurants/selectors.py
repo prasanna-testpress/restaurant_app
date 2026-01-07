@@ -1,19 +1,21 @@
-from typing import Optional
-
-from django.db.models import Case, IntegerField, Value, When
+from django.db.models import Q
 
 from .models import Restaurant
 
 
 def get_restaurant_list(
     *,
-    city: Optional[str] = None,
-    veg_type: Optional[str] = None,
-    is_open: Optional[bool] = None,
-    cuisine: Optional[str] = None,
-    sort: Optional[str] = None,
+    city=None,
+    veg_type=None,
+    cuisine=None,
+    sort=None,
+    is_open=None,
 ):
-    queryset = Restaurant.objects.all()
+    queryset = (
+        Restaurant.objects
+        .prefetch_related("cuisines")
+        .order_by("-is_spotlight", "name")
+    )
 
     if city:
         queryset = queryset.filter(city__iexact=city)
@@ -21,27 +23,19 @@ def get_restaurant_list(
     if veg_type:
         queryset = queryset.filter(veg_type=veg_type)
 
-    if is_open is not None:
-        queryset = queryset.filter(is_open=is_open)
-
     if cuisine:
         queryset = queryset.filter(cuisines__name__iexact=cuisine)
 
-    queryset = queryset.distinct()
+    if is_open is not None:
+        queryset = queryset.filter(is_open=is_open)
 
-    # Spotlight restaurants first
-    queryset = queryset.annotate(
-        spotlight_order=Case(
-            When(is_spotlight=True, then=Value(0)),
-            default=Value(1),
-            output_field=IntegerField(),
-        )
-    )
-
-    if sort == "cost":
-        queryset = queryset.order_by("spotlight_order", "cost_for_two")
-
+    if sort == "cost_low":
+        queryset = queryset.order_by("cost_for_two")
+    elif sort == "cost_high":
+        queryset = queryset.order_by("-cost_for_two")
+    elif sort == "rating":
+        queryset = queryset.order_by("-is_spotlight", "name")  # placeholder
     else:
-        queryset = queryset.order_by("spotlight_order", "name")
+        queryset = queryset.order_by("-is_spotlight", "name")
 
-    return queryset
+    return queryset.distinct()
