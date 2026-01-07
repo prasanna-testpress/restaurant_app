@@ -1,19 +1,17 @@
 from django.contrib import admin
-from .models import Bookmark, Visited
+from .models import Bookmark, Visited, User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User
-
 
 @admin.register(Bookmark)
 class BookmarkAdmin(admin.ModelAdmin):
     list_display = ["user", "restaurant", "created_at"]
-    search_fields = ["user__username", "restaurant__name"]
+    search_fields = ["user__email", "restaurant__name"]
 
 
 @admin.register(Visited)
 class VisitedAdmin(admin.ModelAdmin):
     list_display = ["user", "restaurant", "visited_at"]
-    search_fields = ["user__username", "restaurant__name"]
+    search_fields = ["user__email", "restaurant__name"]
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
