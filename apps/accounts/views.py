@@ -20,12 +20,11 @@ def signup_view(request):
 
 def login_view(request):
     if request.method == "POST":
-        form = LoginForm(request.POST)
+        form = LoginForm(request=request, data=request.POST)
         if form.is_valid():
-            user = form.get_user()
-            login(request, user)
+            login(request, form.get_user())
             return redirect(settings.LOGIN_REDIRECT_URL)
     else:
-        form = LoginForm()
+        form = LoginForm(request=request)
 
     return render(request, "accounts/login.html", {"form": form})
