@@ -4,11 +4,39 @@ from django.contrib.auth import authenticate, get_user_model
 User = get_user_model()
 
 
-class SignupForm(forms.ModelForm):
+# -------------------------------------------------
+# 1. MIXIN FOR TAILWIND STYLES
+# -------------------------------------------------
+class StyledFormMixin:
+    """
+    Mixin to automatically apply Tailwind CSS classes to all form fields.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        default_classes = (
+            "w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 "
+            "text-gray-800 placeholder-gray-400 focus:outline-none "
+            "focus:border-brand focus:ring-4 focus:ring-brand/10 "
+            "transition duration-200"
+        )
+
+        for field in self.fields.values():
+            field.widget.attrs["class"] = default_classes
+
+
+# -------------------------------------------------
+# 2. SIGNUP FORM
+# -------------------------------------------------
+class SignupForm(StyledFormMixin, forms.ModelForm):
     password1 = forms.CharField(
         label="Password",
         widget=forms.PasswordInput(
-            attrs={"placeholder": "Enter your password", "autocomplete": "new-password"}
+            attrs={
+                "placeholder": "Enter your password",
+                "autocomplete": "new-password",
+            }
         ),
     )
     password2 = forms.CharField(
@@ -54,19 +82,27 @@ class SignupForm(forms.ModelForm):
         return user
 
 
-class LoginForm(forms.Form):
+# -------------------------------------------------
+# 3. LOGIN FORM
+# -------------------------------------------------
+class LoginForm(StyledFormMixin, forms.Form):
     email = forms.EmailField(
+        label="Email Address",
         widget=forms.EmailInput(
-            attrs={"placeholder": "Enter your email address", "autocomplete": "email"}
-        )
+            attrs={
+                "placeholder": "Enter your email address",
+                "autocomplete": "email",
+            }
+        ),
     )
     password = forms.CharField(
+        label="Password",
         widget=forms.PasswordInput(
             attrs={
                 "placeholder": "Enter your password",
                 "autocomplete": "current-password",
             }
-        )
+        ),
     )
 
     def __init__(self, request=None, *args, **kwargs):
@@ -79,17 +115,24 @@ class LoginForm(forms.Form):
         email = cleaned_data.get("email")
         password = cleaned_data.get("password")
 
-        if email and password:
-            self.user = authenticate(
-                request=self.request,
-                username=email,
-                password=password,
+        if not email or not password:
+            return cleaned_data
+
+        self.user = authenticate(
+            request=self.request,
+            username=email,
+            password=password,
+        )
+
+        if self.user is None:
+            raise forms.ValidationError(
+                "Invalid email or password. Please try again."
             )
 
-            if self.user is None or not self.user.is_active:
-                raise forms.ValidationError(
-                    "Invalid email or password. Please try again."
-                )
+        if not self.user.is_active:
+            raise forms.ValidationError(
+                "Invalid email or password. Please try again."
+            )
 
         return cleaned_data
 

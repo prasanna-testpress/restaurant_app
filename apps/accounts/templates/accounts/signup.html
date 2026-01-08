@@ -1,50 +1,81 @@
-{% extends 'base_auth.html' %}
+{% extends 'base.html' %}
 
-{% block title %}Create Account - Tasty Bites
+{% block title %}Create Account - Tasty Bites{% endblock %}
+
+{% block background_image %}
+    style="background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop');"
 {% endblock %}
 
 {% block content %}
-    <h2>Create Account</h2>
-    <p class="subtitle">Join us to book tables easily and get exclusive food offers.</p>
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-2">Create Account</h2>
+        <p class="text-gray-500 text-sm leading-relaxed">Join us to book tables easily and get exclusive food offers.</p>
+    </div>
 
     {% if form.non_field_errors %}
-        <div class="non-field-errors">
-            {{ form.non_field_errors }}
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r">
+            <div class="flex">
+                <div class="ml-3">
+                    <p class="text-sm text-red-700 font-medium">
+                        {{ form.non_field_errors|striptags }}
+                    </p>
+                </div>
+            </div>
         </div>
     {% endif %}
 
-    <form method="post" novalidate="novalidate">
+    <form method="post" novalidate class="space-y-5">
         {% csrf_token %}
 
-        <p>
-            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+        <div>
+            <label for="{{ form.email.id_for_label }}" 
+                   class="block mb-2 text-xs font-bold text-gray-700 uppercase tracking-wide">
+                {{ form.email.label }}
+            </label>
             {{ form.email }}
             {% if form.email.errors %}
-                {{ form.email.errors }}
+                <p class="mt-1 text-xs text-red-600 font-semibold flex items-center">
+                    ✕ {{ form.email.errors|striptags }}
+                </p>
             {% endif %}
-        </p>
+        </div>
 
-        <p>
-            <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+        <div>
+            <label for="{{ form.password1.id_for_label }}" 
+                   class="block mb-2 text-xs font-bold text-gray-700 uppercase tracking-wide">
+                {{ form.password1.label }}
+            </label>
             {{ form.password1 }}
             {% if form.password1.errors %}
-                {{ form.password1.errors }}
+                <p class="mt-1 text-xs text-red-600 font-semibold flex items-center">
+                    ✕ {{ form.password1.errors|striptags }}
+                </p>
             {% endif %}
-        </p>
+        </div>
 
-        <p>
-            <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+        <div>
+            <label for="{{ form.password2.id_for_label }}" 
+                   class="block mb-2 text-xs font-bold text-gray-700 uppercase tracking-wide">
+                {{ form.password2.label }}
+            </label>
             {{ form.password2 }}
             {% if form.password2.errors %}
-                {{ form.password2.errors }}
+                <p class="mt-1 text-xs text-red-600 font-semibold flex items-center">
+                    ✕ {{ form.password2.errors|striptags }}
+                </p>
             {% endif %}
-        </p>
+        </div>
 
-        <button type="submit">Create Account</button>
+        <button type="submit" 
+                class="w-full py-3.5 mt-2 font-bold text-white bg-brand rounded-lg shadow-lg shadow-brand/20 hover:bg-brand-dark transition duration-200 transform hover:-translate-y-0.5">
+            Create Account
+        </button>
     </form>
 
-    <a href="{% url 'login' %}" class="auth-link">
-        Already have an account?
-        <strong>Log In</strong>
-    </a>
+    <div class="mt-8 text-center">
+        <a href="{% url 'login' %}" class="text-sm text-gray-400 hover:text-gray-600 transition">
+            Already have an account? 
+            <strong class="text-brand hover:underline ml-1">Log In</strong>
+        </a>
+    </div>
 {% endblock %}

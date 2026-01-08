@@ -1,30 +1,24 @@
 from django.conf import settings
 from django.contrib.auth import login
-from django.shortcuts import render, redirect
+from django.contrib.auth.views import LoginView
 
-from .forms import LoginForm, SignupForm
+from django.views.generic import FormView
 
-
-def signup_view(request):
-    if request.method == "POST":
-        form = SignupForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect(settings.LOGIN_REDIRECT_URL)
-    else:
-        form = SignupForm()
-
-    return render(request, "accounts/signup.html", {"form": form})
+from .forms import SignupForm, LoginForm
 
 
-def login_view(request):
-    if request.method == "POST":
-        form = LoginForm(request=request, data=request.POST)
-        if form.is_valid():
-            login(request, form.get_user())
-            return redirect(settings.LOGIN_REDIRECT_URL)
-    else:
-        form = LoginForm(request=request)
+class SignupView(FormView):
+    template_name = "accounts/signup.html"
+    form_class = SignupForm
+    success_url = settings.LOGIN_REDIRECT_URL
 
-    return render(request, "accounts/login.html", {"form": form})
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return super().form_valid(form)
+
+
+class LoginView(LoginView):
+    template_name = "accounts/login.html"
+    authentication_form = LoginForm
+    redirect_authenticated_user = True
