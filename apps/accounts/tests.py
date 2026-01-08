@@ -7,7 +7,6 @@ User = get_user_model()
 TEST_PASSWORD = "test-password-not-secret"
 
 
-
 class SignupTests(TestCase):
     """
     Tests related to user signup.
