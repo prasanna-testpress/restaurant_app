@@ -5,152 +5,182 @@
 
 {% block content %}
 
-<section class="hero-small">
-    <div class="container">
-        <h1>Order Food Online</h1>
-        <p>Best food in {{ request.GET.city|default:"your city" }}</p>
+<section class="bg-white border-b border-gray-200 py-12 mb-8">
+    <div class="container mx-auto px-4 text-center">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Order Food Online</h1>
+        <p class="text-gray-500 text-lg">
+            Best food in 
+            <span class="font-semibold text-brand">
+                <i class="fa-solid fa-location-dot mr-1"></i>{{ request.GET.city|default:"your city" }}
+            </span>
+        </p>
     </div>
 </section>
 
-<div class="container layout-wrapper">
+<div class="container mx-auto px-4 pb-12 flex flex-col lg:flex-row gap-8 items-start">
 
-    <!-- Filters -->
-    <aside class="filter-sidebar">
-        <div class="filter-header">
-            <h3>Filters</h3>
-            <a href="{% url 'restaurants:restaurant_list' %}" class="clear-btn">
-                Clear all
-            </a>
+    <aside class="w-full lg:w-64 flex-shrink-0 bg-white p-6 rounded-xl shadow-sm border border-gray-100 lg:sticky lg:top-24">
+        
+        <div class="flex justify-between items-center mb-6 pb-3 border-b border-gray-100">
+            <h3 class="font-bold text-lg text-gray-800">
+                <i class="fa-solid fa-filter mr-2 text-brand"></i>Filters
+            </h3>
+            <a href="{% url 'restaurants:restaurant_list' %}" class="text-sm text-brand font-medium hover:underline">Clear all</a>
         </div>
 
-        <form method="get">
+        <form method="get" class="space-y-6">
 
-            <!-- City -->
-            <div class="filter-group">
-                <label>City</label>
-                <input list="city_list" name="city" class="search-input" value="{{ request.GET.city|default:'' }}"
-                    placeholder="Type to search city…">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">City</label>
+                <div class="relative">
+                    <span class="absolute left-3 top-3 text-gray-400">
+                        <i class="fa-solid fa-location-crosshairs"></i>
+                    </span>
+                    <input list="city_list" name="city" value="{{ request.GET.city|default:'' }}" 
+                           class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+                           placeholder="Search city...">
+                </div>
                 <datalist id="city_list">
-                    {% for city in cities %}
-                    <option value="{{ city }}">
-                        {% endfor %}
+                    {% for city in cities %}<option value="{{ city }}">{% endfor %}
                 </datalist>
             </div>
 
-            <!-- Cuisine -->
-            <div class="filter-group">
-                <label>Cuisine</label>
-                <input list="cuisine_list" name="cuisine" class="search-input"
-                    value="{{ request.GET.cuisine|default:'' }}" placeholder="e.g. Italian, Chinese…">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Cuisine</label>
+                <div class="relative">
+                    <span class="absolute left-3 top-3 text-gray-400">
+                        <i class="fa-solid fa-utensils"></i>
+                    </span>
+                    <input list="cuisine_list" name="cuisine" value="{{ request.GET.cuisine|default:'' }}" 
+                           class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+                           placeholder="Italian, Chinese...">
+                </div>
                 <datalist id="cuisine_list">
-                    {% for cuisine in cuisines %}
-                    <option value="{{ cuisine }}">
-                        {% endfor %}
+                    {% for cuisine in cuisines %}<option value="{{ cuisine }}">{% endfor %}
                 </datalist>
             </div>
 
-            <!-- Veg Type -->
-            <div class="filter-group">
-                <label>Dietary</label>
-
-                <div class="radio-option">
-                    <input type="radio" name="veg_type" value="" {% if not request.GET.veg_type %}checked{% endif %}>
-                    <label>All</label>
-                </div>
-
-                <div class="radio-option">
-                    <input type="radio" name="veg_type" value="veg" {% if request.GET.veg_type  ==  "veg" %}checked="checked" {% endif %}>
-                    <label>Veg</label>
-                </div>
-
-                <div class="radio-option">
-                    <input type="radio" name="veg_type" value="non_veg" {% if request.GET.veg_type  ==  "non_veg" %}checked="checked" {% endif %}>
-                    <label>Non-Veg</label>
-                </div>
-
-                <div class="radio-option">
-                    <input type="radio" name="veg_type" value="vegan" {% if request.GET.veg_type  ==  "vegan" %}checked{% endif %}>
-                    <label>Vegan</label>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Dietary</label>
+                <div class="space-y-2">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="radio" name="veg_type" value="" {% if not request.GET.veg_type %}checked{% endif %} class="text-brand focus:ring-brand">
+                        <span class="text-gray-600 text-sm">All</span>
+                    </label>
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="radio" name="veg_type" value="veg" {% if request.GET.veg_type == 'veg' %}checked{% endif %} class="text-brand focus:ring-brand">
+                        <span class="text-gray-600 text-sm"><i class="fa-solid fa-leaf text-green-500 mr-1"></i>Pure Veg</span>
+                    </label>
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="radio" name="veg_type" value="non_veg" {% if request.GET.veg_type == 'non_veg' %}checked{% endif %} class="text-brand focus:ring-brand">
+                        <span class="text-gray-600 text-sm"><i class="fa-solid fa-drumstick-bite text-red-500 mr-1"></i>Non-Veg</span>
+                    </label>
                 </div>
             </div>
 
-            <!-- Open Only -->
-            <div class="filter-group checkbox-group">
-                <input type="checkbox" name="is_open" value="true" {% if request.GET.is_open == "true" %}checked {% endif %}>
-                <label>Show Open Only</label>
-            </div>
+            <label class="flex items-center space-x-2 cursor-pointer bg-gray-50 p-3 rounded-lg border border-gray-200">
+                <input type="checkbox" name="is_open" value="true" {% if request.GET.is_open == 'true' %}checked{% endif %} 
+                       class="rounded text-brand focus:ring-brand h-4 w-4">
+                <span class="text-gray-700 text-sm font-medium">Show Open Only</span>
+            </label>
 
-            <!-- Sort -->
-            <div class="filter-group">
-                <label>Sort By</label>
-                <select name="sort">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Sort By</label>
+                <select name="sort" class="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-brand">
                     <option value="">Default</option>
-                    <option value="cost_low" {% if request.GET.sort == "cost_low" %}selected{% endif %}>
-                        Cost: Low to High
-                    </option>
-                    <option value="cost_high" {% if request.GET.sort == "cost_high" %}selected{% endif %}>
-                        Cost: High to Low
-                    </option>
+                  
+                    <option value="cost_low" {% if request.GET.sort == 'cost_low' %}selected{% endif %}>Cost: Low to High</option>
+                    <option value="cost_high" {% if request.GET.sort == 'cost_high' %}selected{% endif %}>Cost: High to Low</option>
                 </select>
             </div>
 
-            <button type="submit" class="apply-btn">Apply</button>
+            <button type="submit" class="w-full py-2.5 bg-brand text-white font-bold rounded-lg hover:bg-brand-dark transition shadow-lg shadow-brand/20">
+                Apply Filters
+            </button>
         </form>
     </aside>
 
-    <!-- Results -->
-    <main class="content-area">
-
-        <div class="results-meta">
-            Showing {{ page_obj.paginator.count }} restaurants
+    <main class="flex-1">
+        <div class="mb-6 text-gray-500 text-sm">
+            Showing <span class="font-bold text-gray-800">{{ page_obj.paginator.count }}</span> restaurants
         </div>
 
-        <div class="restaurant-grid">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {% for restaurant in restaurants %}
-            <div class="card">
-                <img src="{% static 'images/default-food.jpg' %}" class="card-img">
+            <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 border border-gray-100 flex flex-col h-full group">
+                
+                <div class="relative h-48 overflow-hidden">
+                    {% if restaurant.cover_image %}
+                        <img src="{{ restaurant.cover_image }}" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" alt="{{ restaurant.name }}">
+                    {% else %}
+                        <img src="{% static 'images/default-food.jpg' %}" class="w-full h-full object-cover" alt="Default">
+                    {% endif %}
+                    
+                    {% if restaurant.rating %}
+                    <div class="absolute bottom-3 right-3 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded shadow-md">
+                        {{ restaurant.rating }} <i class="fa-solid fa-star text-[10px]"></i>
+                    </div>
+                    {% endif %}
+                </div>
 
-                <div class="card-body">
-                    <div class="card-header-row">
-                       <span class="rating-badge">★</span>
+                <div class="p-5 flex flex-col flex-1">
+                    <div class="flex justify-between items-start mb-1">
+                        <h3 class="text-lg font-bold text-gray-800 leading-tight">{{ restaurant.name }}</h3>
                     </div>
 
-                    <div class="card-meta">
-                        <span>
-                            {% for cuisine in restaurant.cuisines.all %}
-                                {{ cuisine.name }}{% if not forloop.last %}, {% endif %}
-                            {% endfor %}
-                            • {{ restaurant.city }}
-                        </span>
-                        <span class="price">₹{{ restaurant.cost_for_two }} for two</span>
+                    <div class="text-sm text-gray-500 mb-4 space-y-1">
+                        <div class="flex items-center gap-1">
+                            <i class="fa-solid fa-utensils text-gray-400 text-xs"></i>
+                            <span class="truncate">
+                                {% for cuisine in restaurant.cuisines.all %}
+                                    {{ cuisine.name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-1">
+                                <i class="fa-solid fa-location-dot text-gray-400 text-xs"></i>
+                                {{ restaurant.city }}
+                            </span>
+                            <span class="font-semibold text-gray-700">₹{{ restaurant.cost_for_two }} for two</span>
+                        </div>
                     </div>
 
-                    <a href="#" class="view-btn">View Menu</a>
+                    <a href="#" 
+                       class="mt-auto block w-full text-center py-2 border border-brand text-brand font-semibold rounded-lg hover:bg-brand hover:text-white transition">
+                        View Menu
+                    </a>
                 </div>
             </div>
             {% empty %}
-            <div class="empty-state">
-                <h3>No matches found 😕</h3>
-                <p>Try clearing your filters to see more results.</p>
-                <a href="{% url 'restaurants:restaurant_list' %}" class="btn-text">Reset Filters</a>
+            <div class="col-span-full text-center py-12 bg-white rounded-xl border border-dashed border-gray-300">
+                <div class="text-4xl mb-4">😕</div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">No matches found</h3>
+                <p class="text-gray-500 mb-6">Try clearing your filters to see more results.</p>
+                <a href="{% url 'restaurants:restaurant_list' %}" class="inline-block px-6 py-2 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition">
+                    Reset Filters
+                </a>
             </div>
             {% endfor %}
         </div>
 
-        <!-- Pagination -->
         {% if is_paginated %}
-        <div class="pagination">
+        <div class="flex justify-center mt-12 gap-2">
             {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}&{{ query_params.urlencode }}">
-                ← Prev
+            <a href="?page={{ page_obj.previous_page_number }}&{{ query_params.urlencode }}" 
+               class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-600 hover:border-brand hover:text-brand transition">
+                <i class="fa-solid fa-arrow-left mr-1"></i> Prev
             </a>
             {% endif %}
 
-            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            <span class="px-4 py-2 text-gray-500">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
 
             {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}&{{ query_params.urlencode }}">
-                Next →
+            <a href="?page={{ page_obj.next_page_number }}&{{ query_params.urlencode }}" 
+               class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-600 hover:border-brand hover:text-brand transition">
+                Next <i class="fa-solid fa-arrow-right ml-1"></i>
             </a>
             {% endif %}
         </div>
