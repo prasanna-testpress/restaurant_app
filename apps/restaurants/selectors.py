@@ -12,9 +12,8 @@ def get_restaurant_list(
     is_open=None,
 ):
     queryset = (
-        Restaurant.objects
-        .prefetch_related("cuisines")
-        .order_by("-is_spotlight", "name")
+        Restaurant.objects.prefetch_related("images", "cuisines")
+
     )
 
     if city:
@@ -34,7 +33,7 @@ def get_restaurant_list(
     elif sort == "cost_high":
         queryset = queryset.order_by("-cost_for_two")
     elif sort == "rating":
-        queryset = queryset.order_by("-is_spotlight", "name")  # placeholder
+        queryset = queryset.order_by("-is_spotlight", "name")  
     else:
         queryset = queryset.order_by("-is_spotlight", "name")
 
