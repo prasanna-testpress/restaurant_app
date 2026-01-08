@@ -4,7 +4,8 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-TEST_PASSWORD = "test-password-123"
+TEST_PASSWORD = "test-password-not-secret"
+
 
 
 class SignupTests(TestCase):
