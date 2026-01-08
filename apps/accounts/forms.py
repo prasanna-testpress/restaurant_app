@@ -129,11 +129,6 @@ class LoginForm(StyledFormMixin, forms.Form):
                 "Invalid email or password. Please try again."
             )
 
-        if not self.user.is_active:
-            raise forms.ValidationError(
-                "Invalid email or password. Please try again."
-            )
-
         return cleaned_data
 
     def get_user(self):
