@@ -4,9 +4,6 @@ from django.contrib.auth import authenticate, get_user_model
 User = get_user_model()
 
 
-# -------------------------------------------------
-# 1. MIXIN FOR TAILWIND STYLES
-# -------------------------------------------------
 class StyledFormMixin:
     """
     Mixin to automatically apply Tailwind CSS classes to all form fields.
@@ -26,9 +23,6 @@ class StyledFormMixin:
             field.widget.attrs["class"] = default_classes
 
 
-# -------------------------------------------------
-# 2. SIGNUP FORM
-# -------------------------------------------------
 class SignupForm(StyledFormMixin, forms.ModelForm):
     password1 = forms.CharField(
         label="Password",
@@ -82,9 +76,6 @@ class SignupForm(StyledFormMixin, forms.ModelForm):
         return user
 
 
-# -------------------------------------------------
-# 3. LOGIN FORM
-# -------------------------------------------------
 class LoginForm(StyledFormMixin, forms.Form):
     email = forms.EmailField(
         label="Email Address",
