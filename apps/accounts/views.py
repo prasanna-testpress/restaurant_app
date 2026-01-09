@@ -4,7 +4,7 @@ from django.contrib.auth.views import LoginView
 
 from django.views.generic import FormView
 
-from .forms import SignupForm, LoginForm
+from apps.accounts.forms import SignupForm, LoginForm
 
 
 class SignupView(FormView):
