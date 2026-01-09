@@ -4,26 +4,7 @@ from django.contrib.auth import authenticate, get_user_model
 User = get_user_model()
 
 
-class StyledFormMixin:
-    """
-    Mixin to automatically apply Tailwind CSS classes to all form fields.
-    """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        default_classes = (
-            "w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 "
-            "text-gray-800 placeholder-gray-400 focus:outline-none "
-            "focus:border-brand focus:ring-4 focus:ring-brand/10 "
-            "transition duration-200"
-        )
-
-        for field in self.fields.values():
-            field.widget.attrs["class"] = default_classes
-
-
-class SignupForm(StyledFormMixin, forms.ModelForm):
+class SignupForm(forms.ModelForm):
     password1 = forms.CharField(
         label="Password",
         widget=forms.PasswordInput(
@@ -61,11 +42,7 @@ class SignupForm(StyledFormMixin, forms.ModelForm):
         password2 = cleaned_data.get("password2")
 
         if password1 and password2 and password1 != password2:
-            self.add_error(
-                "password2",
-                "Passwords do not match. Please try again.",
-            )
-
+            self.add_error("password2", "Passwords do not match.")
         return cleaned_data
 
     def save(self, commit=True):
@@ -76,7 +53,7 @@ class SignupForm(StyledFormMixin, forms.ModelForm):
         return user
 
 
-class LoginForm(StyledFormMixin, forms.Form):
+class LoginForm(forms.Form):
     email = forms.EmailField(
         label="Email Address",
         widget=forms.EmailInput(
@@ -116,9 +93,7 @@ class LoginForm(StyledFormMixin, forms.Form):
         )
 
         if self.user is None:
-            raise forms.ValidationError(
-                "Invalid email or password. Please try again."
-            )
+            raise forms.ValidationError("Invalid email or password.")
 
         return cleaned_data
 

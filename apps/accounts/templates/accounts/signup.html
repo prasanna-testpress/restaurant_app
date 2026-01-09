@@ -24,53 +24,19 @@
         </div>
     {% endif %}
 
-    <form method="post" novalidate class="space-y-5">
-        {% csrf_token %}
+   <form method="post" novalidate class="space-y-5">
+    {% csrf_token %}
 
-        <div>
-            <label for="{{ form.email.id_for_label }}" 
-                   class="block mb-2 text-xs font-bold text-gray-700 uppercase tracking-wide">
-                {{ form.email.label }}
-            </label>
-            {{ form.email }}
-            {% if form.email.errors %}
-                <p class="mt-1 text-xs text-red-600 font-semibold flex items-center">
-                    ✕ {{ form.email.errors|striptags }}
-                </p>
-            {% endif %}
-        </div>
+    {% include "components/form_input.html" with field=form.email %}
+    {% include "components/form_input.html" with field=form.password1 %}
+    {% include "components/form_input.html" with field=form.password2 %}
 
-        <div>
-            <label for="{{ form.password1.id_for_label }}" 
-                   class="block mb-2 text-xs font-bold text-gray-700 uppercase tracking-wide">
-                {{ form.password1.label }}
-            </label>
-            {{ form.password1 }}
-            {% if form.password1.errors %}
-                <p class="mt-1 text-xs text-red-600 font-semibold flex items-center">
-                    ✕ {{ form.password1.errors|striptags }}
-                </p>
-            {% endif %}
-        </div>
+    <button type="submit"
+            class="w-full py-3.5 font-bold text-white bg-brand rounded-lg shadow-lg shadow-brand/20 hover:bg-brand-dark transition duration-200 transform hover:-translate-y-0.5">
+        Create Account
+    </button>
+</form>
 
-        <div>
-            <label for="{{ form.password2.id_for_label }}" 
-                   class="block mb-2 text-xs font-bold text-gray-700 uppercase tracking-wide">
-                {{ form.password2.label }}
-            </label>
-            {{ form.password2 }}
-            {% if form.password2.errors %}
-                <p class="mt-1 text-xs text-red-600 font-semibold flex items-center">
-                    ✕ {{ form.password2.errors|striptags }}
-                </p>
-            {% endif %}
-        </div>
-
-        <button type="submit" 
-                class="w-full py-3.5 mt-2 font-bold text-white bg-brand rounded-lg shadow-lg shadow-brand/20 hover:bg-brand-dark transition duration-200 transform hover:-translate-y-0.5">
-            Create Account
-        </button>
-    </form>
 
     <div class="mt-8 text-center">
         <a href="{% url 'login' %}" class="text-sm text-gray-400 hover:text-gray-600 transition">
