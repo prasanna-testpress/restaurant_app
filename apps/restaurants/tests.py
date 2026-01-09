@@ -1,4 +1,4 @@
-from django.urls.base import reverse
+from django.urls import reverse
 from django.test import TestCase
 
 from apps.restaurants.models import Restaurant

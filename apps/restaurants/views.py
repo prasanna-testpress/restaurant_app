@@ -1,7 +1,7 @@
 from django.views.generic import ListView
 
-from .models import Restaurant, Cuisine
-from .selectors import get_restaurant_list
+from apps.restaurants.models import Restaurant, Cuisine
+from apps.restaurants.selectors import get_restaurant_list
 
 
 class RestaurantListView(ListView):
