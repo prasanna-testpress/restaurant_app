@@ -1,8 +1,16 @@
 from django.views.generic import ListView, DetailView
 
-from apps.restaurants.models import Restaurant, Cuisine
 from apps.restaurants.filters import RestaurantFilter
-from apps.restaurants.selectors import get_restaurant_detail
+from apps.restaurants.models import Restaurant
+from apps.restaurants.selectors import (
+    get_restaurant_filter_queryset,
+    get_spotlight_restaurants,
+    get_city_list,
+    get_cuisine_list,
+    get_restaurant_detail,
+    get_restaurant_detail_context,
+)
+
 
 class RestaurantListView(ListView):
     template_name = "restaurants/list.html"
@@ -10,39 +18,24 @@ class RestaurantListView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        base_qs = get_restaurant_filter_queryset()
         self.filterset = RestaurantFilter(
             data=self.request.GET,
-            queryset=Restaurant.objects.prefetch_related(
-                "images",
-                "cuisines",
-            ),
+            queryset=base_qs,
         )
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # IMPORTANT: use UNSLICED queryset
         base_qs = self.filterset.qs
 
-        context["spotlight_restaurants"] = base_qs.filter(is_spotlight=True)
-       
-
-        context["filter"] = self.filterset
-
-        context["cities"] = (
-            Restaurant.objects
-            .values_list("city", flat=True)
-            .distinct()
-            .order_by("city")
-        )
-
-        context["cuisines"] = (
-            Cuisine.objects
-            .values_list("name", flat=True)
-            .distinct()
-            .order_by("name")
-        )
+        context.update({
+            "filter": self.filterset,
+            "spotlight_restaurants": get_spotlight_restaurants(base_qs),
+            "cities": get_city_list(),
+            "cuisines": get_cuisine_list(),
+        })
 
         query_params = self.request.GET.copy()
         query_params.pop("page", None)
@@ -52,11 +45,22 @@ class RestaurantListView(ListView):
 
 
 class RestaurantDetailView(DetailView):
-    model = Restaurant
     template_name = "restaurants/detail.html"
     context_object_name = "restaurant"
     pk_url_kwarg = "id"
 
     def get_object(self, queryset=None):
-        return get_restaurant_detail(restaurant_id=self.kwargs["id"])
-        
+        return get_restaurant_detail(
+            restaurant_id=self.kwargs["id"]
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context.update(
+            get_restaurant_detail_context(
+                restaurant=self.object,
+                user=self.request.user,
+            )
+        )
+        return context

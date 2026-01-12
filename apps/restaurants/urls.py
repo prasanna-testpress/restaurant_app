@@ -11,11 +11,11 @@ urlpatterns = [
     path(
         "restaurants/<int:restaurant_id>/bookmark/",
         BookmarkView.as_view(),
-        name="restaurant-bookmark",
+        name="bookmark",
     ),
     path(
         "restaurants/<int:restaurant_id>/visited/",
         VisitedView.as_view(),
-        name="restaurant-visited",
+        name="visited",
     ),
 ]
