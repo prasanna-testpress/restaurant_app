@@ -59,3 +59,4 @@ class RestaurantDetailView(DetailView):
 
     def get_object(self, queryset=None):
         return get_restaurant_detail(restaurant_id=self.kwargs["id"])
+        
