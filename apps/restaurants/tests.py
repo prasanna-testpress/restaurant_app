@@ -4,61 +4,61 @@ from django.test import TestCase
 from apps.restaurants.models import Restaurant
 from apps.restaurants.filters import RestaurantFilter
 
+class RestaurantFilterTests(TestCase):
 
-import django_filters
+    def test_filter_by_city(self):
+        Restaurant.objects.create(
+            name="Chennai Veg",
+            city="Chennai",
+            address="Addr",
+            cost_for_two=200,
+            veg_type="veg",
+        )
+        Restaurant.objects.create(
+            name="Bangalore Veg",
+            city="Bangalore",
+            address="Addr",
+            cost_for_two=200,
+            veg_type="veg",
+        )
 
-from apps.restaurants.models import Restaurant
+        queryset = Restaurant.objects.all()
+        filterset = RestaurantFilter(
+            data={"city": "chennai"},
+            queryset=queryset,
+        )
 
+        results = filterset.qs
 
-class RestaurantFilter(django_filters.FilterSet):
-    city = django_filters.CharFilter(
-        field_name="city",
-        lookup_expr="iexact",
-    )
-    veg_type = django_filters.CharFilter(
-        field_name="veg_type",
-    )
-    cuisine = django_filters.CharFilter(
-        field_name="cuisines__name",
-        lookup_expr="iexact",
-    )
-    is_open = django_filters.BooleanFilter(
-        field_name="is_open",
-    )
+        self.assertEqual(results.count(), 1)
+        self.assertEqual(results.first().city, "Chennai")
 
-    sort = django_filters.ChoiceFilter(
-        method="filter_sort",
-        choices=(
-            ("cost_low", "Cost: Low to High"),
-            ("cost_high", "Cost: High to Low"),
-        ),
-    )
+    def test_spotlight_restaurants_appear_first_by_default(self):
+        Restaurant.objects.create(
+            name="Normal",
+            city="Chennai",
+            address="Addr",
+            cost_for_two=300,
+            veg_type="veg",
+            is_spotlight=False,
+        )
+        spotlight = Restaurant.objects.create(
+            name="Spotlight",
+            city="Chennai",
+            address="Addr",
+            cost_for_two=300,
+            veg_type="veg",
+            is_spotlight=True,
+        )
 
-    class Meta:
-        model = Restaurant
-        fields = [
-            "city",
-            "veg_type",
-            "cuisine",
-            "is_open",
-        ]
+        filterset = RestaurantFilter(
+            data={},
+            queryset=Restaurant.objects.all(),
+        )
 
-    def filter_sort(self, queryset, name, value):
-        if value == "cost_low":
-            return queryset.order_by("cost_for_two")
-        if value == "cost_high":
-            return queryset.order_by("-cost_for_two")
+        restaurants = list(filterset.qs)
 
-        return queryset
-
-    @property
-    def qs(self):
-        queryset = super().qs
-
-        if not self.data.get("sort"):
-            return queryset.order_by("-is_spotlight", "name")
-
-        return queryset
+        self.assertEqual(restaurants[0], spotlight)
 
         
 class RestaurantListViewTests(TestCase):
