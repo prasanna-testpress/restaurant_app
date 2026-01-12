@@ -1,43 +1,42 @@
-{% extends 'base_auth.html' %}
+{% extends 'auth_base.html' %}
 
-{% block title %}Welcome Back - Tasty Bites
-{% endblock %}
+{% block title %}Welcome Back - Tasty Bites{% endblock %}
 
-{% block background_image %}style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop');"
+{% block background_image %}
+    style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop');"
 {% endblock %}
 
 {% block content %}
-    <h2>Welcome Back!</h2>
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back!</h2>
+        <p class="text-gray-500 text-sm">Please sign in to continue your delicious journey.</p>
+    </div>
+
     {% if form.non_field_errors %}
-        <div class="non-field-errors">
-            {{ form.non_field_errors }}
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r">
+            <p class="text-sm text-red-700 font-medium">
+                {{ form.non_field_errors|striptags }}
+            </p>
         </div>
     {% endif %}
 
-    <form method="post" novalidate="novalidate">
-        {% csrf_token %}
+    <form method="post" novalidate class="space-y-5">
+    {% csrf_token %}
 
-        <p>
-            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
-            {{ form.email }}
-            {% if form.email.errors %}
-                {{ form.email.errors }}
-            {% endif %}
-        </p>
+    {% include "components/form_input.html" with field=form.email %}
+    {% include "components/form_input.html" with field=form.password %}
 
-        <p>
-            <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
-            {{ form.password }}
-            {% if form.password.errors %}
-                {{ form.password.errors }}
-            {% endif %}
-        </p>
+    <button type="submit"
+            class="w-full py-3.5 font-bold text-white bg-brand rounded-lg shadow-lg shadow-brand/20 hover:bg-brand-dark transition duration-200 transform hover:-translate-y-0.5">
+        Sign In
+    </button>
+</form>
 
-        <button type="submit">Sign In</button>
-    </form>
 
-    <a href="{% url 'signup' %}" class="auth-link">
-        New to Tasty Bites?
-        <strong>Create Account</strong>
-    </a>
+    <div class="mt-8 text-center">
+        <a href="{% url 'signup' %}" class="text-sm text-gray-400 hover:text-gray-600 transition">
+            New to Tasty Bites? 
+            <strong class="text-brand hover:underline ml-1">Create Account</strong>
+        </a>
+    </div>
 {% endblock %}
