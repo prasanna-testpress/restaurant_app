@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tasty Bites{% endblock %}</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { DEFAULT: '#ff6b35', dark: '#e55a2b', light: '#fff0e8' },
+                        dark: '#2d3436',
+                    },
+                    fontFamily: { sans: ['Segoe UI', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
+
+    <nav class="fixed top-0 w-full bg-white shadow-sm z-50 h-[70px]">
+        <div class="container mx-auto px-4 h-full flex justify-between items-center">
+            
+            <a href="/" class="text-2xl font-extrabold text-brand tracking-tight flex items-center gap-2">
+                <i class="fa-solid fa-burger"></i> TastyBites
+            </a>
+
+            <div class="hidden md:flex items-center space-x-8 font-medium text-gray-600">
+                <a href="/" class="hover:text-brand transition">Home</a>
+                <a href="{% url 'restaurants:restaurant_list' %}" class="hover:text-brand transition">Restaurants</a>
+                
+                {% if user.is_authenticated %}
+                    <a href="#" class="hover:text-brand transition">
+                        <i class="fa-solid fa-receipt mr-1"></i> My Orders
+                    </a>
+                    <a href="{% url 'logout' %}" class="text-red-500 hover:text-red-600 transition">
+                        <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="hover:text-brand transition">Log In</a>
+                    <a href="{% url 'signup' %}" class="px-5 py-2 bg-brand text-white rounded-full hover:bg-brand-dark transition shadow-md shadow-brand/20">
+                        Sign Up
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="h-[70px]"></div>
+
+    {% block content %}{% endblock %}
+
+</body>
+</html>

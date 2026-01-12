@@ -1,0 +1,30 @@
+[
+  {
+    "model": "restaurants.restaurant",
+    "pk": 1,
+    "fields": {
+      "name": "Spicy Palace",
+      "city": "Chennai",
+      "address": "Anna Nagar",
+      "cost_for_two": 500,
+      "veg_type": "non_veg",
+      "is_open": true,
+      "is_spotlight": true,
+      "created_at": "2026-01-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "restaurants.restaurant",
+    "pk": 2,
+    "fields": {
+      "name": "Green Bowl",
+      "city": "Chennai",
+      "address": "Velachery",
+      "cost_for_two": 300,
+      "veg_type": "veg",
+      "is_open": true,
+      "is_spotlight": false,
+      "created_at": "2026-01-01T10:05:00Z"
+    }
+  }
+]

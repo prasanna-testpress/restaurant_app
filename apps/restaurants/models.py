@@ -56,6 +56,12 @@ class Restaurant(models.Model):
     def __str__(self):
         return self.name
 
+    
+    @property
+    def cover_image(self):
+        image = self.images.first()
+        return image.image.url if image else None
+
 
 class MenuItem(models.Model):
     restaurant = models.ForeignKey(
