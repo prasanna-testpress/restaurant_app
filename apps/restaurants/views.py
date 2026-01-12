@@ -1,8 +1,8 @@
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from apps.restaurants.models import Restaurant, Cuisine
 from apps.restaurants.filters import RestaurantFilter
-
+from apps.restaurants.selectors import get_restaurant_detail
 
 class RestaurantListView(ListView):
     template_name = "restaurants/list.html"
@@ -49,3 +49,13 @@ class RestaurantListView(ListView):
         context["query_params"] = query_params
 
         return context
+
+
+class RestaurantDetailView(DetailView):
+    model = Restaurant
+    template_name = "restaurants/detail.html"
+    context_object_name = "restaurant"
+    pk_url_kwarg = "id"
+
+    def get_object(self, queryset=None):
+        return get_restaurant_detail(restaurant_id=self.kwargs["id"])
