@@ -61,7 +61,7 @@ class RestaurantListViewTests(TestCase):
             veg_type="veg",
         )
 
-        response = self.client.get(reverse("restaurant_list"))
+        response = self.client.get(reverse("restaurants:restaurant_list"))
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Test Restaurant")
