@@ -1,46 +1,40 @@
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-from apps.accounts.models import User, Bookmark
-from apps.restaurants.models import Restaurant, Cuisine
+from apps.restaurants.models import Restaurant
+from apps.accounts.models import Bookmark
+
+User = get_user_model()
 
 
 class BookmarkViewTests(TestCase):
+
     def setUp(self):
         self.user = User.objects.create_user(
             email="user@test.com",
-            password="password123",
+            password="pass1234",
         )
-
-        self.restaurant = self._create_restaurant()
-
-        self.client.login(
-            email="user@test.com",
-            password="password123",
-        )
-
-    def _create_restaurant(self):
-        restaurant = Restaurant.objects.create(
+        self.restaurant = Restaurant.objects.create(
             name="Test Restaurant",
             city="Chennai",
-            address="123 Food Street",
-            cost_for_two=400,
-            veg_type=Restaurant.VegChoices.NON_VEG,
-            is_open=True,
+            address="Addr",
+            cost_for_two=300,
+            veg_type="veg",
         )
-
-        cuisine = Cuisine.objects.create(name="South Indian")
-        restaurant.cuisines.add(cuisine)
-
-        return restaurant
-
-    def test_user_can_bookmark_restaurant(self):
-        url = reverse(
-            "restaurants:restaurant-bookmark",
+        self.url = reverse(
+            "restaurants:bookmark",
             kwargs={"restaurant_id": self.restaurant.id},
         )
 
-        response = self.client.post(url)
+    def test_login_required(self):
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, 302)
+
+    def test_user_can_bookmark_restaurant(self):
+        self.client.login(email="user@test.com", password="pass1234")
+
+        response = self.client.post(self.url)
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(
@@ -55,13 +49,9 @@ class BookmarkViewTests(TestCase):
             user=self.user,
             restaurant=self.restaurant,
         )
+        self.client.login(email="user@test.com", password="pass1234")
 
-        url = reverse(
-            "restaurants:restaurant-bookmark",
-            kwargs={"restaurant_id": self.restaurant.id},
-        )
-
-        response = self.client.delete(url)
+        response = self.client.delete(self.url)
 
         self.assertEqual(response.status_code, 200)
         self.assertFalse(

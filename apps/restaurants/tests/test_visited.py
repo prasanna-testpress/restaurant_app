@@ -1,46 +1,40 @@
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-from apps.accounts.models import User, Visited
-from apps.restaurants.models import Cuisine, Restaurant
+from apps.restaurants.models import Restaurant
+from apps.accounts.models import Visited
+
+User = get_user_model()
 
 
 class VisitedViewTests(TestCase):
+
     def setUp(self):
         self.user = User.objects.create_user(
             email="user@test.com",
-            password="password123",
+            password="pass1234",
         )
-
-        self.restaurant = self._create_restaurant()
-
-        self.client.login(
-            email="user@test.com",
-            password="password123",
-        )
-
-    def _create_restaurant(self):
-        restaurant = Restaurant.objects.create(
+        self.restaurant = Restaurant.objects.create(
             name="Visited Restaurant",
             city="Bangalore",
-            address="123 Test Street",
-            cost_for_two=500,
-            veg_type=Restaurant.VegChoices.VEG,
-            is_open=True,
+            address="Addr",
+            cost_for_two=400,
+            veg_type="veg",
         )
-
-        cuisine = Cuisine.objects.create(name="Indian")
-        restaurant.cuisines.add(cuisine)
-
-        return restaurant
-
-    def test_user_can_mark_restaurant_as_visited(self):
-        url = reverse(
-            "restaurants:restaurant-visited",
+        self.url = reverse(
+            "restaurants:visited",
             kwargs={"restaurant_id": self.restaurant.id},
         )
 
-        response = self.client.post(url)
+    def test_login_required(self):
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, 302)
+
+    def test_user_can_mark_restaurant_as_visited(self):
+        self.client.login(email="user@test.com", password="pass1234")
+
+        response = self.client.post(self.url)
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(
@@ -55,13 +49,9 @@ class VisitedViewTests(TestCase):
             user=self.user,
             restaurant=self.restaurant,
         )
+        self.client.login(email="user@test.com", password="pass1234")
 
-        url = reverse(
-            "restaurants:restaurant-visited",
-            kwargs={"restaurant_id": self.restaurant.id},
-        )
-
-        response = self.client.delete(url)
+        response = self.client.delete(self.url)
 
         self.assertEqual(response.status_code, 200)
         self.assertFalse(
