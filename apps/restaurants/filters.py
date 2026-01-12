@@ -1,10 +1,3 @@
-from django.urls import reverse
-from django.test import TestCase
-
-from apps.restaurants.models import Restaurant
-from apps.restaurants.filters import RestaurantFilter
-
-
 import django_filters
 
 from apps.restaurants.models import Restaurant
@@ -48,31 +41,14 @@ class RestaurantFilter(django_filters.FilterSet):
             return queryset.order_by("cost_for_two")
         if value == "cost_high":
             return queryset.order_by("-cost_for_two")
-
         return queryset
 
     @property
     def qs(self):
-        queryset = super().qs
+        queryset = super().qs.distinct()
 
+        # Default ordering: spotlight first
         if not self.data.get("sort"):
             return queryset.order_by("-is_spotlight", "name")
 
         return queryset
-
-        
-class RestaurantListViewTests(TestCase):
-
-    def test_restaurant_list_page_loads(self):
-        Restaurant.objects.create(
-            name="Test Restaurant",
-            city="Chennai",
-            address="Addr",
-            cost_for_two=250,
-            veg_type="veg",
-        )
-
-        response = self.client.get(reverse("restaurants:restaurant_list"))
-
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Test Restaurant")

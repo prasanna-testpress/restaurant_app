@@ -1,0 +1,100 @@
+{% load static %}
+
+<div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 border border-gray-100 flex flex-col h-full group">
+    
+    <div class="relative h-48 overflow-hidden">
+        <a href="#" class="block h-full w-full {% if not restaurant.is_open %}grayscale opacity-80{% endif %}">
+            {% if restaurant.cover_image %}
+                <img src="{{ restaurant.cover_image }}" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" alt="{{ restaurant.name }}">
+            {% else %}
+                <img src="{% static 'images/default-food.jpg' %}" class="w-full h-full object-cover" alt="Default">
+            {% endif %}
+        </a>
+        
+        <div class="absolute top-3 left-3">
+            {% if restaurant.veg_type == 'veg' %}
+                <span class="bg-white/90 backdrop-blur-sm border border-green-200 text-green-700 text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1">
+                    <i class="fa-solid fa-leaf"></i> PURE VEG
+                </span>
+            {% elif restaurant.veg_type == 'vegan' %}
+                <span class="bg-white/90 backdrop-blur-sm border border-emerald-200 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1">
+                    <i class="fa-solid fa-seedling"></i> VEGAN
+                </span>
+            {% elif restaurant.veg_type == 'non_veg' %}
+                <span class="bg-white/90 backdrop-blur-sm border border-red-200 text-red-700 text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1">
+                    <i class="fa-solid fa-drumstick-bite"></i> NON-VEG
+                </span>
+            {% endif %}
+        </div>
+
+        <div class="absolute top-3 right-3">
+            {% if restaurant.is_open %}
+                <span class="bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow-md flex items-center gap-1">
+                    <i class="fa-regular fa-clock"></i> OPEN
+                </span>
+            {% else %}
+                <span class="bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow-md flex items-center gap-1">
+                    <i class="fa-solid fa-lock"></i> CLOSED
+                </span>
+            {% endif %}
+        </div>
+
+        {% if restaurant.rating %}
+        <div class="absolute bottom-3 right-3 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded shadow-md flex items-center gap-1">
+            {{ restaurant.rating }} <i class="fa-solid fa-star text-[10px]"></i>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="p-5 flex flex-col flex-1">
+        
+        <div class="flex justify-between items-start mb-3">
+            <h3 class="text-lg font-bold text-gray-800 leading-tight group-hover:text-brand transition">
+                <a href="#">
+                    {{ restaurant.name }}
+                </a>
+            </h3>
+            {% if restaurant.is_spotlight %}
+                <span class="text-amber-500 text-xs" title="Spotlight Restaurant">
+                    <i class="fa-solid fa-crown"></i>
+                </span>
+            {% endif %}
+        </div>
+
+        <div class="mb-4">
+            <div class="flex flex-wrap gap-1.5 h-[26px] overflow-hidden items-center"> 
+                {% for cuisine in restaurant.cuisines.all %}
+                    <span class="text-[11px] bg-gray-50 text-gray-600 border border-gray-200 px-2 py-0.5 rounded-full whitespace-nowrap">
+                        {{ cuisine.name }}
+                    </span>
+                {% empty %}
+                    <span class="text-[11px] text-gray-400 italic flex items-center gap-1">
+                        <i class="fa-solid fa-utensils"></i> Various
+                    </span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="text-sm text-gray-500 mb-5 space-y-2 mt-auto">
+            <div class="flex items-center justify-between border-t border-gray-50 pt-3">
+                <span class="flex items-center gap-1.5 truncate max-w-[50%]">
+                    <i class="fa-solid fa-location-dot text-gray-300 text-xs"></i>
+                    <span class="truncate" title="{{ restaurant.city }}">{{ restaurant.city }}</span>
+                </span>
+                <span class="font-semibold text-gray-700 flex items-center gap-1">
+                    <i class="fa-solid fa-wallet text-gray-300 text-xs"></i>
+                    ₹{{ restaurant.cost_for_two }}
+                </span>
+            </div>
+        </div>
+
+        <a href="#" 
+           class="block w-full text-center py-2.5 border border-brand/30 text-brand font-bold text-sm rounded-lg hover:bg-brand hover:text-white transition duration-200 {% if not restaurant.is_open %}opacity-50 cursor-not-allowed hover:bg-white hover:text-brand{% endif %}">
+           {% if restaurant.is_open %}
+               View Menu
+           {% else %}
+               Closed Now
+           {% endif %}
+        </a>
+    </div>
+</div>

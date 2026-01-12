@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'apps.accounts',
     'apps.restaurants',
     'apps.reviews',
+    "django_filters",
 
 ]
 

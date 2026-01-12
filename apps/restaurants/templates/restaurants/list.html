@@ -29,13 +29,10 @@
         </div>
 
         <form method="get" class="space-y-6">
-
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">City</label>
                 <div class="relative">
-                    <span class="absolute left-3 top-3 text-gray-400">
-                        <i class="fa-solid fa-location-crosshairs"></i>
-                    </span>
+                    <span class="absolute left-3 top-3 text-gray-400"><i class="fa-solid fa-location-crosshairs"></i></span>
                     <input list="city_list" name="city" value="{{ request.GET.city|default:'' }}" 
                            class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
                            placeholder="Search city...">
@@ -48,9 +45,7 @@
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Cuisine</label>
                 <div class="relative">
-                    <span class="absolute left-3 top-3 text-gray-400">
-                        <i class="fa-solid fa-utensils"></i>
-                    </span>
+                    <span class="absolute left-3 top-3 text-gray-400"><i class="fa-solid fa-utensils"></i></span>
                     <input list="cuisine_list" name="cuisine" value="{{ request.GET.cuisine|default:'' }}" 
                            class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
                            placeholder="Italian, Chinese...">
@@ -64,40 +59,26 @@
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Dietary</label>
                 <div class="space-y-2">
                     <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="radio" name="veg_type" value="" {% if not request.GET.veg_type %}checked{% endif %} 
-                               class="text-brand focus:ring-brand cursor-pointer">
+                        <input type="radio" name="veg_type" value="" {% if not request.GET.veg_type %}checked{% endif %} class="text-brand focus:ring-brand cursor-pointer">
                         <span class="text-gray-600 text-sm group-hover:text-brand transition">All</span>
                     </label>
-
                     <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="radio" name="veg_type" value="veg" {% if request.GET.veg_type == 'veg' %}checked{% endif %} 
-                               class="text-brand focus:ring-brand cursor-pointer">
-                        <span class="text-gray-600 text-sm group-hover:text-brand transition">
-                            <i class="fa-solid fa-leaf text-green-500 mr-1 w-4 text-center"></i> Pure Veg
-                        </span>
+                        <input type="radio" name="veg_type" value="veg" {% if request.GET.veg_type == 'veg' %}checked{% endif %} class="text-brand focus:ring-brand cursor-pointer">
+                        <span class="text-gray-600 text-sm group-hover:text-brand transition"><i class="fa-solid fa-leaf text-green-500 mr-1 w-4 text-center"></i> Pure Veg</span>
                     </label>
-
                     <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="radio" name="veg_type" value="non_veg" {% if request.GET.veg_type == 'non_veg' %}checked{% endif %} 
-                               class="text-brand focus:ring-brand cursor-pointer">
-                        <span class="text-gray-600 text-sm group-hover:text-brand transition">
-                            <i class="fa-solid fa-drumstick-bite text-red-500 mr-1 w-4 text-center"></i> Non-Veg
-                        </span>
+                        <input type="radio" name="veg_type" value="non_veg" {% if request.GET.veg_type == 'non_veg' %}checked{% endif %} class="text-brand focus:ring-brand cursor-pointer">
+                        <span class="text-gray-600 text-sm group-hover:text-brand transition"><i class="fa-solid fa-drumstick-bite text-red-500 mr-1 w-4 text-center"></i> Non-Veg</span>
                     </label>
-
                     <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="radio" name="veg_type" value="vegan" {% if request.GET.veg_type == 'vegan' %}checked{% endif %} 
-                               class="text-brand focus:ring-brand cursor-pointer">
-                        <span class="text-gray-600 text-sm group-hover:text-brand transition">
-                            <i class="fa-solid fa-seedling text-emerald-500 mr-1 w-4 text-center"></i> Vegan
-                        </span>
+                        <input type="radio" name="veg_type" value="vegan" {% if request.GET.veg_type == 'vegan' %}checked{% endif %} class="text-brand focus:ring-brand cursor-pointer">
+                        <span class="text-gray-600 text-sm group-hover:text-brand transition"><i class="fa-solid fa-seedling text-emerald-500 mr-1 w-4 text-center"></i> Vegan</span>
                     </label>
                 </div>
             </div>
 
             <label class="flex items-center space-x-2 cursor-pointer bg-gray-50 p-3 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
-                <input type="checkbox" name="is_open" value="true" {% if request.GET.is_open == 'true' %}checked{% endif %} 
-                       class="rounded text-brand focus:ring-brand h-4 w-4">
+                <input type="checkbox" name="is_open" value="true" {% if request.GET.is_open == 'true' %}checked{% endif %} class="rounded text-brand focus:ring-brand h-4 w-4">
                 <span class="text-gray-700 text-sm font-medium">Show Open Only</span>
             </label>
 
@@ -117,112 +98,76 @@
     </aside>
 
     <main class="flex-1">
-        <div class="mb-6 text-gray-500 text-sm">
-            Showing <span class="font-bold text-gray-800">{{ page_obj.paginator.count }}</span> restaurants
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-            {% for restaurant in restaurants %}
-            <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 border border-gray-100 flex flex-col h-full group">
-                
-                <div class="relative h-48 overflow-hidden">
-                    {% if restaurant.cover_image %}
-                        <img src="{{ restaurant.cover_image }}" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" alt="{{ restaurant.name }}">
-                    {% else %}
-                        <img src="{% static 'images/default-food.jpg' %}" class="w-full h-full object-cover" alt="Default">
-                    {% endif %}
-                    
-                    <div class="absolute top-3 left-3">
-                        {% if restaurant.veg_type == 'veg' %}
-                            <span class="bg-white/90 backdrop-blur-sm border border-green-200 text-green-700 text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1">
-                                <i class="fa-solid fa-leaf"></i> PURE VEG
-                            </span>
-                        {% elif restaurant.veg_type == 'vegan' %}
-                            <span class="bg-white/90 backdrop-blur-sm border border-emerald-200 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1">
-                                <i class="fa-solid fa-seedling"></i> VEGAN
-                            </span>
-                        {% elif restaurant.veg_type == 'non_veg' %}
-                            <span class="bg-white/90 backdrop-blur-sm border border-red-200 text-red-700 text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1">
-                                <i class="fa-solid fa-drumstick-bite"></i> NON-VEG
-                            </span>
-                        {% endif %}
-                    </div>
-
-                <div class="p-5 flex flex-col flex-1">
-                    <div class="flex justify-between items-start mb-3">
-                        <h3 class="text-lg font-bold text-gray-800 leading-tight group-hover:text-brand transition">
-                            {{ restaurant.name }}
-                        </h3>
-                        {% if restaurant.is_spotlight %}
-                            <span class="text-amber-500 text-xs" title="Spotlight Restaurant">
-                                <i class="fa-solid fa-crown"></i>
-                            </span>
-                        {% endif %}
-                    </div>
-
-                    <div class="mb-4">
-                        <div class="flex flex-wrap gap-1.5 h-[26px] overflow-hidden"> 
-                            {% for cuisine in restaurant.cuisines.all %}
-                                <span class="text-[11px] bg-gray-50 text-gray-600 border border-gray-200 px-2 py-0.5 rounded-full whitespace-nowrap">
-                                    {{ cuisine.name }}
-                                </span>
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                    <div class="text-sm text-gray-500 mb-5 space-y-2 mt-auto">
-                        <div class="flex items-center justify-between border-t border-gray-50 pt-3">
-                            <span class="flex items-center gap-1.5 truncate max-w-[50%]">
-                                <i class="fa-solid fa-location-dot text-gray-300 text-xs"></i>
-                                <span class="truncate" title="{{ restaurant.city }}">{{ restaurant.city }}</span>
-                            </span>
-                            <span class="font-semibold text-gray-700 flex items-center gap-1">
-                                <i class="fa-solid fa-wallet text-gray-300 text-xs"></i>
-                                ₹{{ restaurant.cost_for_two }}
-                            </span>
-                        </div>
-                    </div>
-
-                    <a href="#" 
-                       class="block w-full text-center py-2.5 border border-brand/30 text-brand font-bold text-sm rounded-lg hover:bg-brand hover:text-white transition duration-200">
-                        View Menu
-                    </a>
+        
+        <section class="mb-10 border-b border-gray-200 pb-8">
+            <div class="flex justify-between items-end mb-4">
+                <div>
+                    <span class="uppercase tracking-widest text-xs font-bold text-brand mb-1 block">Editor's Pick</span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Spotlight Restaurants</h2>
                 </div>
             </div>
-            
-            {% empty %}
-            <div class="col-span-full flex flex-col items-center justify-center py-16 bg-white rounded-xl border border-dashed border-gray-300">
-                <div class="text-6xl mb-4 opacity-50">😕</div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">No matches found</h3>
-                <p class="text-gray-500 mb-6">We couldn't find any restaurants matching your filters.</p>
-                <a href="{% url 'restaurants:restaurant_list' %}" class="px-6 py-2.5 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition flex items-center gap-2">
-                    <i class="fa-solid fa-rotate-left"></i> Reset Filters
-                </a>
+
+            {% if spotlight_restaurants %}
+                <div class="flex gap-6 overflow-x-auto pb-4 snap-x">
+                    {% for restaurant in spotlight_restaurants %}
+                        <div class="min-w-[300px] w-[300px] snap-center">
+                            {% include "restaurants/restaurant_card.html" with restaurant=restaurant %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="bg-gray-50 rounded-lg p-6 text-center border border-dashed border-gray-300">
+                    <p class="text-gray-500 italic">No spotlight restaurants available at the moment.</p>
+                </div>
+            {% endif %}
+        </section>
+
+
+        <section>
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-bold text-xl text-gray-800">All Restaurants</h3>
+                <span class="text-gray-500 text-sm">Showing <span class="font-bold text-gray-800">{{ page_obj.paginator.count }}</span> results</span>
             </div>
-            {% endfor %}
-        </div>
 
-        {% if is_paginated %}
-        <div class="flex justify-center mt-12 gap-2">
-            {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}&{{ query_params.urlencode }}" 
-               class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-600 hover:border-brand hover:text-brand transition">
-                <i class="fa-solid fa-arrow-left mr-1"></i> Prev
-            </a>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                {% for restaurant in restaurants %}
+                    
+                    {% include "restaurants/restaurant_card.html" with restaurant=restaurant %}
+                
+                {% empty %}
+                    <div class="col-span-full flex flex-col items-center justify-center py-16 bg-white rounded-xl border border-dashed border-gray-300">
+                        <div class="text-6xl mb-4 opacity-50">😕</div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">No matches found</h3>
+                        <p class="text-gray-500 mb-6">We couldn't find any restaurants matching your filters.</p>
+                        <a href="{% url 'restaurants:restaurant_list' %}" class="px-6 py-2.5 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition flex items-center gap-2">
+                            <i class="fa-solid fa-rotate-left"></i> Reset Filters
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if is_paginated %}
+            <div class="flex justify-center mt-12 gap-2">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}&{{ query_params.urlencode }}" 
+                   class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-600 hover:border-brand hover:text-brand transition">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> Prev
+                </a>
+                {% endif %}
+
+                <span class="px-4 py-2 text-gray-500">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&{{ query_params.urlencode }}" 
+                   class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-600 hover:border-brand hover:text-brand transition">
+                    Next <i class="fa-solid fa-arrow-right ml-1"></i>
+                </a>
+                {% endif %}
+            </div>
             {% endif %}
-
-            <span class="px-4 py-2 text-gray-500">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-            </span>
-
-            {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}&{{ query_params.urlencode }}" 
-               class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-600 hover:border-brand hover:text-brand transition">
-                Next <i class="fa-solid fa-arrow-right ml-1"></i>
-            </a>
-            {% endif %}
-        </div>
-        {% endif %}
+        </section>
 
     </main>
 </div>

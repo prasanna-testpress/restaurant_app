@@ -1,7 +1,7 @@
 from django.views.generic import ListView
 
 from apps.restaurants.models import Restaurant, Cuisine
-from apps.restaurants.selectors import get_restaurant_list
+from apps.restaurants.filters import RestaurantFilter
 
 
 class RestaurantListView(ListView):
@@ -10,18 +10,25 @@ class RestaurantListView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        params = self.request.GET
-
-        return get_restaurant_list(
-            city=params.get("city"),
-            veg_type=params.get("veg_type"),
-            cuisine=params.get("cuisine"),
-            sort=params.get("sort"),
-            is_open=self._parse_boolean(params.get("is_open")),
+        self.filterset = RestaurantFilter(
+            data=self.request.GET,
+            queryset=Restaurant.objects.prefetch_related(
+                "images",
+                "cuisines",
+            ),
         )
+        return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        # IMPORTANT: use UNSLICED queryset
+        base_qs = self.filterset.qs
+
+        context["spotlight_restaurants"] = base_qs.filter(is_spotlight=True)
+       
+
+        context["filter"] = self.filterset
 
         context["cities"] = (
             Restaurant.objects
@@ -37,17 +44,8 @@ class RestaurantListView(ListView):
             .order_by("name")
         )
 
-        # Preserve filters during pagination
         query_params = self.request.GET.copy()
         query_params.pop("page", None)
         context["query_params"] = query_params
 
         return context
-
-    @staticmethod
-    def _parse_boolean(value):
-        if value == "true":
-            return True
-        if value == "false":
-            return False
-        return None
