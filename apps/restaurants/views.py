@@ -2,7 +2,6 @@ from django.views.generic import ListView, DetailView
 
 from apps.restaurants.models import Restaurant, Cuisine
 from apps.restaurants.filters import RestaurantFilter
-from apps.restaurants.selectors import get_restaurant_detail
 
 class RestaurantListView(ListView):
     template_name = "restaurants/list.html"
@@ -27,7 +26,6 @@ class RestaurantListView(ListView):
 
         context["spotlight_restaurants"] = base_qs.filter(is_spotlight=True)
        
-
         context["filter"] = self.filterset
 
         context["cities"] = (
@@ -57,6 +55,44 @@ class RestaurantDetailView(DetailView):
     context_object_name = "restaurant"
     pk_url_kwarg = "id"
 
+    class RestaurantDetailView(DetailView):
+    model = Restaurant
+    template_name = "restaurants/detail.html"
+    context_object_name = "restaurant"
+    pk_url_kwarg = "id"
+
     def get_object(self, queryset=None):
-        return get_restaurant_detail(restaurant_id=self.kwargs["id"])
-        
+        return get_object_or_404(
+            _get_restaurant_detail_queryset(),
+            id=self.kwargs["id"],
+        )
+
+def _get_restaurant_detail_queryset():
+    """
+    Helper function for RestaurantDetailView.
+    Encapsulates complex query logic.
+    """
+    return (
+        Restaurant.objects
+        .prefetch_related(
+            "cuisines",
+            Prefetch(
+                "menu_items",
+                queryset=MenuItem.objects.order_by("name"),
+            ),
+            Prefetch(
+                "images",
+                queryset=RestaurantImage.objects.order_by("uploaded_at"),
+            ),
+            Prefetch(
+                "reviews",
+                queryset=Review.objects
+                .select_related("user")
+                .order_by("-created_at"),
+            ),
+        )
+        .annotate(
+            avg_rating=Avg("reviews__rating"),
+            review_count=Count("reviews"),
+        )
+    )

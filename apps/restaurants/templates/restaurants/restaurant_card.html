@@ -3,13 +3,13 @@
 <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 border border-gray-100 flex flex-col h-full group">
     
     <div class="relative h-48 overflow-hidden">
-        <a href="#" class="block h-full w-full {% if not restaurant.is_open %}grayscale opacity-80{% endif %}">
+        <div class="block h-full w-full {% if not restaurant.is_open %}grayscale opacity-80{% endif %}">
             {% if restaurant.cover_image %}
                 <img src="{{ restaurant.cover_image }}" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" alt="{{ restaurant.name }}">
             {% else %}
                 <img src="{% static 'images/default-food.jpg' %}" class="w-full h-full object-cover" alt="Default">
             {% endif %}
-        </a>
+        </div>
         
         <div class="absolute top-3 left-3">
             {% if restaurant.veg_type == 'veg' %}
@@ -88,13 +88,9 @@
             </div>
         </div>
 
-        <a href="#" 
-           class="block w-full text-center py-2.5 border border-brand/30 text-brand font-bold text-sm rounded-lg hover:bg-brand hover:text-white transition duration-200 {% if not restaurant.is_open %}opacity-50 cursor-not-allowed hover:bg-white hover:text-brand{% endif %}">
-           {% if restaurant.is_open %}
+        <a href="{% url 'restaurants:restaurant_detail' restaurant.id %}" 
+           class="block w-full text-center py-2.5 border border-brand/30 text-brand font-bold text-sm rounded-lg hover:bg-brand hover:text-white transition duration-200">
                View Menu
-           {% else %}
-               Closed Now
-           {% endif %}
         </a>
     </div>
 </div>
