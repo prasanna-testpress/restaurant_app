@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.test import TestCase
 
-from apps.restaurants.models import Restaurant
+from apps.restaurants.models import Restaurant,Cuisine
 from apps.restaurants.filters import RestaurantFilter
 
 class RestaurantFilterTests(TestCase):
@@ -76,3 +76,27 @@ class RestaurantListViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Test Restaurant")
+
+
+class RestaurantDetailTests(TestCase):
+
+    def setUp(self):
+        self.cuisine = Cuisine.objects.create(name="Indian")
+        self.restaurant = Restaurant.objects.create(
+            name="Spice Hub",
+            city="Chennai",
+            address="Main Road",
+            cost_for_two=500,
+        )
+        self.restaurant.cuisines.add(self.cuisine)
+
+    def test_detail_page_loads(self):
+        url = reverse("restaurants:restaurant_detail", args=[self.restaurant.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Spice Hub")
+
+    def test_detail_page_404(self):
+        url = reverse("restaurants:restaurant_detail", args=[9999])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
