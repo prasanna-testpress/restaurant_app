@@ -27,7 +27,7 @@ class RestaurantListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # IMPORTANT: use UNSLICED queryset
+
         base_qs = self.filterset.qs
 
         context["spotlight_restaurants"] = base_qs.filter(is_spotlight=True)
