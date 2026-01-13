@@ -1,7 +1,13 @@
+from django.shortcuts import get_object_or_404
+
 from django.views.generic import ListView, DetailView
 
-from apps.restaurants.models import Restaurant, Cuisine
+from apps.restaurants.models import Restaurant, Cuisine,MenuItem, RestaurantImage
+from django.db.models import Avg, Count, Prefetch
+from apps.reviews.models import Review
+
 from apps.restaurants.filters import RestaurantFilter
+
 
 class RestaurantListView(ListView):
     template_name = "restaurants/list.html"
@@ -49,13 +55,8 @@ class RestaurantListView(ListView):
         return context
 
 
-class RestaurantDetailView(DetailView):
-    model = Restaurant
-    template_name = "restaurants/detail.html"
-    context_object_name = "restaurant"
-    pk_url_kwarg = "id"
 
-    class RestaurantDetailView(DetailView):
+class RestaurantDetailView(DetailView):
     model = Restaurant
     template_name = "restaurants/detail.html"
     context_object_name = "restaurant"
