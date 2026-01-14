@@ -1,111 +1,117 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}{{ restaurant.name }} – Tasty Bites{% endblock %}
+{% block title %}
+{{ restaurant.name }}
+– Tasty Bites
+{% endblock %}
 
 {% block content %}
+    {% include 'restaurant/banner.html' %}
 
-{% include 'restaurant/banner.html' %}
+    <div class="container mx-auto px-4 pb-12 grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
 
-<div class="container mx-auto px-4 pb-12 grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <main class="lg:col-span-2 space-y-10">
+            <section>
+                <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-images text-brand"></i>
+                    Photos
+                </h3>
 
-    <main class="lg:col-span-2 space-y-10">
-
-        <section>
-            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-images text-brand"></i> Photos
-            </h3>
-            
-            <div class="flex gap-4 overflow-x-auto pb-4 snap-x scrollbar-hide">
-                {% for img in restaurant.images.all %}
-                    <img src="{{ img.image.url }}" alt="{{ restaurant.name }}" 
-                         class="h-48 w-64 object-cover flex-shrink-0 rounded-xl shadow-sm border border-gray-100 snap-center">
-                {% empty %}
-                    <div class="w-full bg-gray-50 rounded-xl border border-dashed border-gray-300 p-8 text-center">
-                        <i class="fa-regular fa-image text-4xl text-gray-300 mb-2"></i>
-                        <p class="text-gray-500 text-sm">No photos uploaded yet</p>
-                    </div>
-                {% endfor %}
-            </div>
-        </section>
-
-        <hr class="border-gray-100">
-
-        <section>
-            <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                <i class="fa-solid fa-utensils text-brand"></i> Menu
-            </h3>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {% for item in restaurant.menu_items.all %}
-                <div class="bg-white border border-gray-100 rounded-xl p-4 flex items-center gap-4 hover:shadow-lg hover:border-brand/30 transition duration-200 group">
-                    
-                    <div class="w-20 h-20 flex-shrink-0">
-                        {% if item.image %}
-                            <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-full object-cover rounded-lg shadow-sm">
-                        {% else %}
-                            <img src="{% static 'images/default-food.jpg' %}" alt="Default" class="w-full h-full object-cover rounded-lg opacity-80 grayscale group-hover:grayscale-0 transition">
-                        {% endif %}
-                    </div>
-
-                    <div class="flex-1 min-w-0">
-                        <h4 class="font-bold text-gray-800 truncate" title="{{ item.name }}">{{ item.name }}</h4>
-                        <span class="text-gray-600 font-semibold text-sm">₹{{ item.price }}</span>
-                    </div>
-
-                    <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-brand text-brand hover:bg-brand hover:text-white transition shadow-sm">
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
-                </div>
-                {% empty %}
-                <p class="col-span-full text-gray-500 italic text-center py-4">No menu items listed yet.</p>
-                {% endfor %}
-            </div>
-        </section>
-
-        <hr class="border-gray-100">
-
-        <section>
-            <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                <i class="fa-solid fa-comments text-brand"></i> Reviews
-            </h3>
-            
-            <div class="space-y-6">
-                {% for review in restaurant.reviews.all %}
-                <div class="bg-white border-b border-gray-100 pb-6 last:border-0">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="w-10 h-10 rounded-full bg-orange-100 text-brand font-bold flex items-center justify-center text-sm border border-orange-200">
-                            {{ review.user.email|slice:":1"|upper }}
-                        </div>
-                        
-                        <div>
-                            <div class="text-sm font-bold text-gray-800">{{ review.user.email }}</div>
-                            <div class="flex items-center gap-2 text-xs">
-                                <span class="text-yellow-400">
-                                    {% for _ in "x"|ljust:review.rating %}
-                                    <i class="fa-solid fa-star"></i>
-                                    {% endfor %}
-                                </span>
-                                <span class="text-gray-400">• {{ review.created_at|timesince }} ago</span>
+                <div class="flex gap-4 overflow-x-auto pb-4 snap-x scrollbar-hide">
+                    {% for img in restaurant.images.all %}
+                        <img src="{{ img.image.url }}" alt="{{ restaurant.name }}"
+                            class="h-48 w-64 object-cover flex-shrink-0 rounded-xl shadow-sm border border-gray-100 snap-center">
+                        {% empty %}
+                            <div class="w-full bg-gray-50 rounded-xl border border-dashed border-gray-300 p-8 text-center">
+                                <i class="fa-regular fa-image text-4xl text-gray-300 mb-2"></i>
+                                <p class="text-gray-500 text-sm">No photos uploaded yet</p>
                             </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <hr class="border-gray-100">
+
+            <section>
+                <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                    <i class="fa-solid fa-utensils text-brand"></i>
+                    Menu
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {% for item in restaurant.menu_items.all %}
+                        <div class="bg-white border border-gray-100 rounded-xl p-4 flex items-center gap-4 hover:shadow-lg hover:border-brand/30 transition duration-200 group">
+                            <div class="w-20 h-20 flex-shrink-0">
+                                {% if item.image %}
+                                    <img src="{{ item.image.url }}" alt="{{ item.name }}"
+                                        class="w-full h-full object-cover rounded-lg shadow-sm">
+                                {% else %}
+                                    <img src="{% static 'images/default-food.jpg' %}" alt="Default"
+                                        class="w-full h-full object-cover rounded-lg opacity-80 grayscale group-hover:grayscale-0 transition">
+                                {% endif %}
+                            </div>
+
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-bold text-gray-800 truncate" title="{{ item.name }}">{{ item.name }}</h4>
+                                <span class="text-gray-600 font-semibold text-sm">₹{{ item.price }}</span>
+                            </div>
+
+                            <button
+                                class="w-8 h-8 flex items-center justify-center rounded-lg border border-brand text-brand hover:bg-brand hover:text-white transition shadow-sm">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
                         </div>
-                    </div>
-                    <p class="text-gray-600 text-sm leading-relaxed pl-14">
-                        {{ review.comment }}
-                    </p>
+                    {% empty %}
+                        <p class="col-span-full text-gray-500 italic text-center py-4">No menu items listed yet.</p>
+                    {% endfor %}
                 </div>
-                {% empty %}
-                <div class="bg-blue-50 text-blue-800 p-4 rounded-lg text-center text-sm">
-                    No reviews yet. Be the first to review!
+            </section>
+
+            <hr class="border-gray-100">
+
+            <section>
+                <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                    <i class="fa-solid fa-comments text-brand"></i>
+                    Reviews
+                </h3>
+
+                <div class="space-y-6">
+                    {% for review in restaurant.reviews.all %}
+                        <div class="bg-white border-b border-gray-100 pb-6 last:border-0">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-orange-100 text-brand font-bold flex items-center justify-center text-sm border border-orange-200">
+                                    {{ review.user.email|slice:":1"|upper }}
+                                </div>
+
+                                <div>
+                                    <div class="text-sm font-bold text-gray-800">{{ review.user.email }}</div>
+                                    <div class="flex items-center gap-2 text-xs">
+                                        <span class="text-yellow-400">
+                                            {% for _ in "x"|ljust:review.rating %}
+                                                <i class="fa-solid fa-star"></i>
+                                            {% endfor %}
+                                        </span>
+                                        <span class="text-gray-400">•
+                                            {{ review.created_at|timesince }} ago
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm leading-relaxed pl-14">
+                                {{ review.comment }}
+                            </p>
+                        </div>
+                        {% empty %}
+                            <div class="bg-blue-50 text-blue-800 p-4 rounded-lg text-center text-sm">
+                                No reviews yet. Be the first to review!
+                            </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-            </div>
-        </section>
+            </section>
+        </main>
 
-    </main>
-
-   {% include 'restaurant/interaction.html' %}
-
-</div>
-
+        {% include 'restaurant/interaction.html' %}
+    </div>
 {% endblock %}
