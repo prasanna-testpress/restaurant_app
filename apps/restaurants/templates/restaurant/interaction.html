@@ -1,11 +1,37 @@
 <aside class="space-y-6 lg:sticky lg:top-24">
+
     <div class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm">
         <h3 class="font-bold text-gray-800 mb-4">Make a Plan</h3>
         <div class="flex flex-col gap-3">
-            <button disabled class="w-full py-2.5 bg-gray-100 text-gray-400 font-semibold rounded-lg cursor-not-allowed flex items-center justify-center gap-2">
-                <i class="fa-solid fa-bookmark"></i>
-                Bookmark
-            </button>
+            {% if user.is_authenticated %}
+                <button 
+                    id="bookmark-btn" 
+                    data-url="{% url 'restaurants:bookmark' restaurant.id %}" 
+                    data-state="{{ is_bookmarked|yesno:'true,false' }}" 
+                    class="w-full py-2.5 font-semibold rounded-lg flex items-center justify-center gap-2
+                        {% if is_bookmarked %}
+                            bg-brand text-white
+                        {% else %}
+                            border border-brand text-brand
+                        {% endif %}">
+                    <i class="fa-solid fa-bookmark"></i>
+                    <span>
+                        {% if is_bookmarked %}
+                            Bookmarked
+                        {% else %}
+                            Bookmark
+                        {% endif %}
+                    </span>
+                </button>
+            {% else %}
+                <p class="text-sm text-gray-500 text-center">
+                    <a href="{% url 'login' %}" class="text-brand font-semibold hover:underline">
+                        Log in
+                    </a>
+                    to bookmark this restaurant.
+                </p>
+            {% endif %}
+
             <button disabled class="w-full py-2.5 border border-gray-200 text-gray-400 font-semibold rounded-lg cursor-not-allowed flex items-center justify-center gap-2">
                 <i class="fa-solid fa-check"></i>
                 Mark Visited

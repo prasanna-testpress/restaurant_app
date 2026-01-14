@@ -8,6 +8,7 @@ from apps.reviews.models import Review
 
 from apps.restaurants.filters import RestaurantFilter
 
+from apps.restaurants.domain import is_restaurant_bookmarked
 
 class RestaurantListView(ListView):
     template_name = "restaurants/list.html"
@@ -67,6 +68,22 @@ class RestaurantDetailView(DetailView):
             _get_restaurant_detail_queryset(),
             id=self.kwargs["id"],
         )
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        restaurant = context["restaurant"]
+        user = self.request.user
+
+        if user.is_authenticated:
+            context["is_bookmarked"] = is_restaurant_bookmarked(
+                user=user,
+                restaurant_id=restaurant.id,
+            )
+            
+        else:
+            context["is_bookmarked"] = False
+
+        return context
 
 def _get_restaurant_detail_queryset():
     """
