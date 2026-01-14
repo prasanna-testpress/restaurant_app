@@ -1,0 +1,46 @@
+<div class="bg-gray-900 text-white py-12 mb-8">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col items-center text-center">
+
+            <h1 class="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight">
+                {{ restaurant.name }}
+            </h1>
+
+            <div class="flex flex-wrap justify-center items-center gap-3 text-gray-300 text-sm md:text-base mb-6">
+                <span class="flex flex-wrap gap-2 justify-center">
+                    {% for cuisine in restaurant.cuisines.all %}
+                        <span class="px-2 py-0.5 border border-gray-600 rounded-full text-xs uppercase tracking-wide text-gray-200">
+                            {{ cuisine.name }}
+                        </span>
+                        {% empty %}
+                        <span class="italic text-gray-500">Cuisines not specified</span>
+                    {% endfor %}
+                </span>
+
+                <span class="hidden md:inline text-gray-600">•</span>
+
+                <span class="flex items-center gap-1">
+                    <i class="fa-solid fa-location-dot text-brand"></i>
+                    {{ restaurant.city }}
+                </span>
+
+                <span class="hidden md:inline text-gray-600">•</span>
+
+                <span class="font-semibold text-white">
+                    ₹{{ restaurant.cost_for_two }}
+                    <span class="font-normal text-gray-400 text-xs">for two</span>
+                </span>
+            </div>
+
+            <div class="inline-flex items-center bg-green-600 text-white px-3 py-1.5 rounded-lg shadow-lg shadow-green-900/20">
+                <span class="font-bold text-lg mr-1">{{ restaurant.avg_rating|default:"--"|floatformat:1 }}</span>
+                <i class="fa-solid fa-star text-sm"></i>
+                <div class="w-px h-4 bg-green-400 mx-2"></div>
+                <span class="text-xs font-medium opacity-90">
+                    {{ restaurant.review_count }} Reviews
+                </span>
+            </div>
+
+        </div>
+    </div>
+</div>

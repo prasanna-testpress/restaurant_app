@@ -58,7 +58,7 @@ class RestaurantListView(ListView):
 
 class RestaurantDetailView(DetailView):
     model = Restaurant
-    template_name = "restaurants/detail.html"
+    template_name = "restaurant/detail.html"
     context_object_name = "restaurant"
     pk_url_kwarg = "id"
 
