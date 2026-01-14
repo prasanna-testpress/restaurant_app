@@ -23,21 +23,31 @@
                         {% endif %}
                     </span>
                 </button>
+                <button 
+                    id="visited-btn" 
+                    data-url="{% url 'restaurants:visited' restaurant.id %}" 
+                    data-state="{{ is_visited|yesno:'true,false' }}" 
+                    class="w-full py-2.5 font-semibold rounded-lg flex items-center justify-center gap-2
+                        {% if is_visited %}
+                            bg-green-600 text-white
+                        {% else %}
+                            border border-green-600 text-green-600
+                        {% endif %}">
+                    <i class="fa-solid fa-check"></i>
+                    <span>
+                        {% if is_visited %}Visited{% else %}Mark Visited
+                        {% endif %}
+                    </span>
+                </button>
             {% else %}
                 <p class="text-sm text-gray-500 text-center">
                     <a href="{% url 'login' %}" class="text-brand font-semibold hover:underline">
                         Log in
                     </a>
-                    to bookmark this restaurant.
+                    to Bookmark / Mark Visited this restaurant.
                 </p>
             {% endif %}
 
-            <button disabled class="w-full py-2.5 border border-gray-200 text-gray-400 font-semibold rounded-lg cursor-not-allowed flex items-center justify-center gap-2">
-                <i class="fa-solid fa-check"></i>
-                Mark Visited
-            </button>
-        </div>
-        <p class="text-xs text-center text-gray-400 mt-3">These features are coming soon!</p>
     </div>
 
     <div class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm">
