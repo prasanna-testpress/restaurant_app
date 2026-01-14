@@ -11,3 +11,4 @@ def is_restaurant_visited(*, user, restaurant_id: int) -> bool:
         user=user,
         restaurant_id=restaurant_id,
     ).exists()
+    

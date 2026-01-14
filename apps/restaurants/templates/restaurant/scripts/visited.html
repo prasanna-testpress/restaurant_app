@@ -19,7 +19,7 @@
         const data = await response.json();
 
         if (!response.ok) {
-          alert(data.error || "Something went wrong");
+          console.error(data.error || "Something went wrong");
           return;
         }
 
@@ -38,7 +38,7 @@
 
       } catch (error) {
         console.error("Visited toggle failed:", error);
-        alert("Network error. Please try again.");
+        
       }
     });
   }
