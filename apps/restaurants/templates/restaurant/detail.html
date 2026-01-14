@@ -5,49 +5,7 @@
 
 {% block content %}
 
-<div class="bg-gray-900 text-white py-12 mb-8">
-    <div class="container mx-auto px-4">
-        <div class="flex flex-col items-center text-center">
-            
-            <h1 class="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight">
-                {{ restaurant.name }}
-            </h1>
-
-            <div class="flex flex-wrap justify-center items-center gap-3 text-gray-300 text-sm md:text-base mb-6">
-                
-                <span class="flex flex-wrap gap-2 justify-center">
-                    {% for cuisine in restaurant.cuisines.all %}
-                        <span class="px-2 py-0.5 border border-gray-600 rounded-full text-xs uppercase tracking-wide text-gray-200">
-                            {{ cuisine.name }}
-                        </span>
-                    {% empty %}
-                        <span class="italic text-gray-500">Cuisines not specified</span>
-                    {% endfor %}
-                </span>
-
-                <span class="hidden md:inline text-gray-600">•</span>
-                
-                <span class="flex items-center gap-1">
-                    <i class="fa-solid fa-location-dot text-brand"></i> {{ restaurant.city }}
-                </span>
-
-                <span class="hidden md:inline text-gray-600">•</span>
-
-                <span class="font-semibold text-white">
-                    ₹{{ restaurant.cost_for_two }} <span class="font-normal text-gray-400 text-xs">for two</span>
-                </span>
-            </div>
-
-            <div class="inline-flex items-center bg-green-600 text-white px-3 py-1.5 rounded-lg shadow-lg shadow-green-900/20">
-                <span class="font-bold text-lg mr-1">{{ restaurant.avg_rating|default:"--"|floatformat:1 }}</span>
-                <i class="fa-solid fa-star text-sm"></i>
-                <div class="w-px h-4 bg-green-400 mx-2"></div>
-                <span class="text-xs font-medium opacity-90">{{ restaurant.review_count }} Reviews</span>
-            </div>
-
-        </div>
-    </div>
-</div>
+{% include 'restaurant/banner.html' %}
 
 <div class="container mx-auto px-4 pb-12 grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
 
@@ -146,50 +104,7 @@
 
     </main>
 
-    <aside class="space-y-6 lg:sticky lg:top-24">
-        
-        <div class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm">
-            <h3 class="font-bold text-gray-800 mb-4">Make a Plan</h3>
-            <div class="flex flex-col gap-3">
-                <button disabled class="w-full py-2.5 bg-gray-100 text-gray-400 font-semibold rounded-lg cursor-not-allowed flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-bookmark"></i> Bookmark
-                </button>
-                <button disabled class="w-full py-2.5 border border-gray-200 text-gray-400 font-semibold rounded-lg cursor-not-allowed flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-check"></i> Mark Visited
-                </button>
-            </div>
-            <p class="text-xs text-center text-gray-400 mt-3">These features are coming soon!</p>
-        </div>
-
-        <div class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm">
-            <h3 class="font-bold text-gray-800 mb-4">Restaurant Info</h3>
-            <ul class="space-y-4">
-                <li>
-                    <strong class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">
-                        Address
-                    </strong>
-                    <p class="text-sm text-gray-700 flex gap-2 items-start">
-                        <i class="fa-solid fa-map-pin text-brand mt-1"></i>
-                        {{ restaurant.address|default:"Address not available" }}
-                    </p>
-                </li>
-                <li class="border-t border-gray-50 pt-4">
-                    <strong class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">
-                        Status
-                    </strong>
-                    {% if restaurant.is_open %}
-                        <p class="text-green-600 font-bold text-sm flex items-center gap-2">
-                            <i class="fa-regular fa-clock"></i> Open Now
-                        </p>
-                    {% else %}
-                        <p class="text-red-500 font-bold text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-store-slash"></i> Closed
-                        </p>
-                    {% endif %}
-                </li>
-            </ul>
-        </div>
-    </aside>
+   {% include 'restaurant/interaction.html' %}
 
 </div>
 
