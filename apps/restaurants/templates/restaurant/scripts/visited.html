@@ -1,0 +1,45 @@
+<script>
+  const btnVisit = document.getElementById("visited-btn");
+
+  if (btnVisit) {
+    const csrfToken = Cookies.get("csrftoken");
+
+    btnVisit.addEventListener("click", async () => {
+      const url = btnVisit.dataset.url;
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": csrfToken,
+            "Accept": "application/json",
+          },
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.error || "Something went wrong");
+          return;
+        }
+
+        const isVisited = data.is_visited;
+        btnVisit.dataset.state = isVisited.toString();
+
+        btnVisit.classList.toggle("bg-green-600", isVisited);
+        btnVisit.classList.toggle("text-white", isVisited);
+        btnVisit.classList.toggle("border", !isVisited);
+        btnVisit.classList.toggle("border-green-600", !isVisited);
+        btnVisit.classList.toggle("text-green-600", !isVisited);
+
+        btnVisit.querySelector("span").textContent = isVisited
+          ? "Visited"
+          : "Mark Visited";
+
+      } catch (error) {
+        console.error("Visited toggle failed:", error);
+        alert("Network error. Please try again.");
+      }
+    });
+  }
+</script>
