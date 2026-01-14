@@ -1,0 +1,47 @@
+<script>
+  const btn = document.getElementById("bookmark-btn");
+  
+  if (!btn) {
+    console.warn("Bookmark button not found");
+  } else {
+    const csrfToken = Cookies.get("csrftoken");
+
+    btn.addEventListener("click", async () => {
+      const url = btn.dataset.url;
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": csrfToken,
+            "Accept": "application/json",
+          },
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.error || "Something went wrong");
+          return;
+        }
+
+        const isBookmarked = data.is_bookmarked;
+        btn.dataset.state = isBookmarked.toString();
+
+        btn.classList.toggle("bg-brand", isBookmarked);
+        btn.classList.toggle("text-white", isBookmarked);
+        btn.classList.toggle("border", !isBookmarked);
+        btn.classList.toggle("border-brand", !isBookmarked);
+        btn.classList.toggle("text-brand", !isBookmarked);
+
+        btn.querySelector("span").textContent = isBookmarked
+          ? "Bookmarked"
+          : "Bookmark";
+
+      } catch (error) {
+        console.error("Bookmark toggle failed:", error);
+        alert("Network error. Please try again.");
+      }
+    });
+  }
+</script>
