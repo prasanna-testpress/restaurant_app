@@ -51,11 +51,17 @@
 
     <div class="p-5 flex flex-col flex-1">
         
-        <div class="flex justify-between items-start mb-2 gap-2">
-            <h3 class="text-lg font-bold text-gray-800 leading-tight group-hover:text-brand transition line-clamp-1">
-                <a href="{% url 'restaurants:restaurant_detail' restaurant.id %}">
+        <div class="flex justify-between items-start">
+            <h3 class="text-lg font-bold text-gray-800 leading-tight group-hover:text-brand transition line-clamp-1 pt-1 ">
+                {% if restaurant.is_spotlight and restaurant.name %}
+                    <span class="relative inline-block mt-2">
+                        <i class="fa-solid fa-crown absolute -top-2.5 left-1/2 -translate-x-1/2 text-[10px] text-amber-500"></i>
+                        {{ restaurant.name|slice:":1" }}
+                    </span><span>{{ restaurant.name|slice:"1:" }}</span> 
+                    
+                {% else %}
                     {{ restaurant.name }}
-                </a>
+                {% endif %}
             </h3>
 
             {% if restaurant.is_open %}
@@ -94,7 +100,7 @@
 
         <a href="{% url 'restaurants:restaurant_detail' restaurant.id %}" 
            class="block w-full text-center py-2.5 border border-brand/30 text-brand font-bold text-sm rounded-lg hover:bg-brand hover:text-white transition duration-200">
-             View Menu
+            View Menu
         </a>
     </div>
 </div>
