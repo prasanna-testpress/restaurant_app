@@ -2,6 +2,8 @@ from apps.restaurants.exceptions import RestaurantNotFound
 from apps.accounts.models import Bookmark, Visited
 from apps.restaurants.models import Restaurant
 from django.db import transaction
+from apps.reviews.models import Review
+from typing import Optional
 
 
 
@@ -39,3 +41,7 @@ def toggle_visited(*, user, restaurant_id: int) -> bool:
         return False
 
     return True
+
+def get_user_review_for_restaurant(*, user: User, restaurant: Restaurant) -> Optional[Review]:
+    return Review.objects.filter(user=user, restaurant=restaurant).first()
+
