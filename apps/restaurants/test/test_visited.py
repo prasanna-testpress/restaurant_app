@@ -86,3 +86,4 @@ class VisitedToggleViewTests(TestCase):
                 restaurant=self.restaurant,
             ).exists()
         )
+
