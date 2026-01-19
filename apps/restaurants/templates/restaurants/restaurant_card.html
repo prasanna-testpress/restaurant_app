@@ -3,7 +3,6 @@
 <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 border border-gray-100 flex flex-col h-full group">
     
     <div class="relative h-48 overflow-hidden">
-        
         <div class="block h-full w-full {% if not restaurant.is_open %}grayscale opacity-80{% endif %}">
             {% if restaurant.cover_image %}
                 <img src="{{ restaurant.cover_image }}" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" alt="{{ restaurant.name }}">
@@ -91,8 +90,8 @@
                     <i class="fa-solid fa-location-dot text-gray-400"></i>
                     <span class="truncate">{{ restaurant.city }}</span>
                 </span>
-                <span class="font-medium text-gray-700 flex items-center gap-1">
-                    <i class="fa-solid fa-wallet text-gray-400"></i>
+                <span class="font-semibold text-gray-700 flex items-center gap-1">
+                    <i class="fa-solid fa-wallet text-gray-300 text-xs"></i>
                     ₹{{ restaurant.cost_for_two }} for two
                 </span>
             </div>
@@ -102,6 +101,5 @@
            class="block w-full text-center py-2.5 border border-brand/30 text-brand font-bold text-sm rounded-lg hover:bg-brand hover:text-white transition duration-200">
                View Menu
         </a>
-        
     </div>
 </div>
