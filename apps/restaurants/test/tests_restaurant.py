@@ -1,8 +1,11 @@
+from apps.accounts.models import Visited,Bookmark
 from django.urls import reverse
 from django.test import TestCase
-
+from django.contrib.auth import get_user_model
 from apps.restaurants.models import Restaurant,Cuisine
 from apps.restaurants.filters import RestaurantFilter
+
+User = get_user_model()
 
 class RestaurantFilterTests(TestCase):
 
@@ -63,6 +66,12 @@ class RestaurantFilterTests(TestCase):
         
 class RestaurantListViewTests(TestCase):
 
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email="user@test.com",
+            password="password",
+        )
+
     def test_restaurant_list_page_loads(self):
         Restaurant.objects.create(
             name="Test Restaurant",
@@ -76,6 +85,24 @@ class RestaurantListViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Test Restaurant")
+
+    def test_list_shows_bookmarked_and_visited_flags(self):
+        self.client.login(email="user@test.com", password="password")
+
+        restaurant = Restaurant.objects.create(
+            name="Test Restaurant",
+            city="Chennai",
+            address="Test address",
+            cost_for_two=300,
+            veg_type="veg",
+        )
+        Bookmark.objects.create(user=self.user, restaurant=restaurant)
+        Visited.objects.create(user=self.user, restaurant=restaurant)
+
+        response = self.client.get(reverse("restaurants:restaurant_list"))
+
+        self.assertContains(response, "fa-bookmark")
+        self.assertContains(response, "Visited")
 
 
 class RestaurantDetailTests(TestCase):

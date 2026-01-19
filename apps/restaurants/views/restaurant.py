@@ -7,7 +7,8 @@ from django.db.models import Avg, Count, Prefetch
 from apps.reviews.models import Review
 
 from apps.restaurants.filters import RestaurantFilter
-
+from django.db.models import OuterRef, Exists
+from apps.accounts.models import Bookmark, Visited
 from apps.restaurants.domain import is_restaurant_bookmarked, is_restaurant_visited, get_user_review_for_restaurant
 
 class RestaurantListView(ListView):
@@ -16,12 +17,30 @@ class RestaurantListView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        qs=(Restaurant.objects.prefetch_related(
+                "images",
+                "cuisines", )
+            )
+
+        if self.request.user.is_authenticated:
+            qs = qs.annotate(
+                is_bookmarked=Exists(
+                    Bookmark.objects.filter(
+                        user=self.request.user,
+                        restaurant=OuterRef("id"),
+                    )
+                ),
+                is_visited=Exists(
+                    Visited.objects.filter(
+                        user=self.request.user,
+                        restaurant=OuterRef("id"),
+                    )
+                ),
+            )
+
         self.filterset = RestaurantFilter(
             data=self.request.GET,
-            queryset=Restaurant.objects.prefetch_related(
-                "images",
-                "cuisines",
-            ),
+            queryset=qs,
         )
         return self.filterset.qs
 
