@@ -4,4 +4,127 @@
         Reviews
     </h3>
 
+    <!-- Reviews list -->
+    <div class="space-y-6 mb-10">
+        {% for review in restaurant.reviews.all %}
+        <div class="bg-white border border-gray-100 rounded-xl p-5">
+            <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-full bg-orange-100 text-brand font-bold
+                            flex items-center justify-center text-sm border border-orange-200">
+                    {{ review.user.email|slice:":1"|upper }}
+                </div>
+
+                <div class="flex-1">
+                    <p class="text-sm font-bold text-gray-800">
+                        {{ review.user.email }}
+                        {% if user_review and review.id == user_review.id %}
+                            <span class="ml-2 text-xs bg-brand/10 text-brand px-2 py-0.5 rounded-full">
+                                You
+                            </span>
+                        {% endif %}
+                    </p>
+
+                    <div class="flex items-center gap-2 text-xs mt-1">
+                        <span class="text-yellow-400">
+                            {% for _ in "x"|ljust:review.rating %}
+                                <i class="fa-solid fa-star"></i>
+                            {% endfor %}
+                        </span>
+                        <span class="text-gray-400">
+                            {{ review.created_at|timesince }} ago
+                        </span>
+                    </div>
+
+                    <p class="text-gray-600 text-sm mt-3">
+                        {{ review.comment }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="bg-blue-50 text-blue-800 p-4 rounded-lg text-center text-sm">
+            No reviews yet. Be the first to review!
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Review form -->
+    {% if user.is_authenticated %}
+    <div class="bg-gray-50 border border-gray-200 rounded-xl p-6">
+
+        <h4 class="font-bold text-gray-800 mb-4">
+            {% if user_review %}
+                Edit Your Review
+            {% else %}
+                Write a Review
+            {% endif %}
+        </h4>
+
+        <!-- Submit / Update -->
+        <form method="post"
+              action="{% url 'reviews:submit' restaurant.id %}"
+              class="space-y-4">
+            {% csrf_token %}
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">
+                    Rating
+                </label>
+                <select name="rating" required
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                    {% for i in "12345" %}
+                    <option value="{{ i }}"
+                        {% if user_review and user_review.rating|stringformat:"s" == i %}
+                            selected
+                        {% endif %}>
+                        {{ i }} Stars
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">
+                    Comment
+                </label>
+                <textarea name="comment"
+                          rows="4"
+                          required
+                          class="w-full border border-gray-300 rounded-lg px-3 py-2"
+                          placeholder="Share your experience...">{{ user_review.comment|default:"" }}</textarea>
+            </div>
+
+            <button type="submit"
+                    class="px-5 py-2.5 bg-brand text-white font-semibold rounded-lg hover:bg-brand-dark transition">
+                {% if user_review %}
+                    Update Review
+                {% else %}
+                    Submit Review
+                {% endif %}
+            </button>
+        </form>
+
+        <!-- Delete (separate POST form) -->
+        {% if user_review %}
+        <form method="post"
+              action="{% url 'reviews:delete' user_review.id %}"
+              class="mt-4"
+              onsubmit="return confirm('Are you sure you want to delete your review?');">
+            {% csrf_token %}
+            <button type="submit"
+                    class="text-sm text-red-600 hover:underline">
+                Delete Review
+            </button>
+        </form>
+        {% endif %}
+
+    </div>
+    {% else %}
+    <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-center text-sm text-gray-600">
+        <a href="{% url 'login' %}" class="text-brand font-semibold hover:underline">
+            Log in
+        </a>
+        to write a review.
+    </div>
+    {% endif %}
 </section>

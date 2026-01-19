@@ -1,3 +1,5 @@
+
+from apps.reviews.domains import get_user_review_for_restaurant
 from django.shortcuts import get_object_or_404
 
 from django.views.generic import ListView, DetailView
@@ -79,16 +81,20 @@ class RestaurantDetailView(DetailView):
                 user=user,
                 restaurant_id=restaurant.id,
             )
-        if user.is_authenticated:
             context["is_visited"] = is_restaurant_visited(
-            user=user,
-            restaurant_id=restaurant.id,
+                user=self.request.user,
+                restaurant_id=restaurant.id,
+            )
+            context["user_review"] = get_user_review_for_restaurant(
+                user=user,
+                restaurant=restaurant,
             )
             
         else:
             context["is_bookmarked"] = False
             context["is_visited"] = False
-
+            context["user_review"] = None
+        
         return context
 
 def _get_restaurant_detail_queryset():
