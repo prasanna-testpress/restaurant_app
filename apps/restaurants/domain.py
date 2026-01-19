@@ -44,4 +44,4 @@ def toggle_visited(*, user, restaurant_id: int) -> bool:
 
 def get_user_review_for_restaurant(*, user: User, restaurant: Restaurant) -> Optional[Review]:
     return Review.objects.filter(user=user, restaurant=restaurant).first()
-    
+
