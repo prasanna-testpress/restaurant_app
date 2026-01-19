@@ -1,5 +1,3 @@
-
-from apps.reviews.domains import get_user_review_for_restaurant
 from django.shortcuts import get_object_or_404
 
 from django.views.generic import ListView, DetailView
@@ -10,7 +8,8 @@ from apps.reviews.models import Review
 
 from apps.restaurants.filters import RestaurantFilter
 
-from apps.restaurants.domain import is_restaurant_bookmarked, is_restaurant_visited
+from apps.restaurants.domain import is_restaurant_bookmarked, is_restaurant_visited, get_user_review_for_restaurant
+
 
 class RestaurantListView(ListView):
     template_name = "restaurants/list.html"
