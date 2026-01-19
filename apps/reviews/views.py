@@ -59,3 +59,4 @@ class ReviewDeleteView(LoginRequiredMixin, View):
         review.delete()
 
         return restaurant_id
+        
