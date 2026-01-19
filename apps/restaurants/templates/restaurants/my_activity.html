@@ -1,51 +1,60 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}My Activity{% endblock %}
+{% block title %}My Activity | {{ user.get_full_name|default:user }}{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8 space-y-10">
+<div class="container mx-auto px-4 py-10 max-w-7xl">
 
-    <!-- Bookmarks -->
-    <section>
-        <h2 class="text-xl font-bold mb-4">Bookmarked Restaurants</h2>
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">My Activity</h1>
+        <p class="text-gray-500 mt-1">Manage your history.</p>
+    </div>
 
-        {% if bookmarked_restaurants %}
-            <ul class="space-y-3">
-                {% for restaurant in bookmarked_restaurants %}
-                    <li class="bg-white border rounded-lg p-4">
-                        <a href="{% url 'restaurants:restaurant_detail' restaurant.id %}"
-                           class="font-semibold text-brand hover:underline">
-                            {{ restaurant.name }}
-                        </a>
-                        <p class="text-sm text-gray-500">{{ restaurant.city }}</p>
-                    </li>
+    <div class="flex border-b border-gray-200 mb-8" id="activityTabs">
+        <button onclick="switchTab('bookmarks')" 
+                id="tab-btn-bookmarks"
+                class="px-6 py-3 font-semibold text-sm transition-colors border-b-2 border-transparent text-gray-500 hover:text-gray-700">
+            <i class="fa-solid fa-bookmark mr-2"></i> Bookmarks
+        </button>
+        <button onclick="switchTab('visited')" 
+                id="tab-btn-visited"
+                class="px-6 py-3 font-semibold text-sm transition-colors border-b-2 border-transparent text-gray-500 hover:text-gray-700">
+            <i class="fa-solid fa-check mr-2"></i> Visited
+        </button>
+    </div>
+
+    <div id="content-bookmarks" class="tab-content hidden">
+        {% if bookmarks_page %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for restaurant in bookmarks_page %}
+                    {% include "restaurants/restaurant_card.html" with restaurant=restaurant %}
                 {% endfor %}
-            </ul>
+            </div>
+            
+            {% include "restaurants/includes/pagination.html" with page_obj=bookmarks_page page_param="bookmarks_page" tab_name="bookmarks" %}
+            
         {% else %}
-            <p class="text-gray-500 text-sm">No bookmarks yet.</p>
+            {% include "restaurants/includes/empty_state.html" with icon="fa-regular fa-bookmark" message="No bookmarks yet" sub_message="Save restaurants you want to visit later." %}
         {% endif %}
-    </section>
+    </div>
 
-    <!-- Visited -->
-    <section>
-        <h2 class="text-xl font-bold mb-4">Visited Restaurants</h2>
-
-        {% if visited_restaurants %}
-            <ul class="space-y-3">
-                {% for restaurant in visited_restaurants %}
-                    <li class="bg-white border rounded-lg p-4">
-                        <a href="{% url 'restaurants:restaurant_detail' restaurant.id %}"
-                           class="font-semibold text-green-600 hover:underline">
-                            {{ restaurant.name }}
-                        </a>
-                        <p class="text-sm text-gray-500">{{ restaurant.city }}</p>
-                    </li>
+    <div id="content-visited" class="tab-content hidden">
+        {% if visited_page %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for restaurant in visited_page %}
+                    {% include "restaurants/restaurant_card.html" with restaurant=restaurant %}
                 {% endfor %}
-            </ul>
+            </div>
+
+            {% include "restaurants/includes/pagination.html" with page_obj=visited_page page_param="visited_page" tab_name="visited" %}
+
         {% else %}
-            <p class="text-gray-500 text-sm">No visited restaurants yet.</p>
+             {% include "restaurants/includes/empty_state.html" with icon="fa-solid fa-utensils" message="No visited places" sub_message="Mark restaurants as visited to track your culinary journey." %}
         {% endif %}
-    </section>
+    </div>
 
 </div>
+
+{% include "restaurants/scripts/tab_switch.html" %}
 {% endblock %}

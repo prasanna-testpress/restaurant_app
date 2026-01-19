@@ -1,0 +1,26 @@
+<script>
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+        
+        document.querySelectorAll('#activityTabs button').forEach(btn => {
+            btn.classList.remove('border-brand', 'text-brand');
+            btn.classList.add('border-transparent', 'text-gray-500');
+        });
+
+        document.getElementById(`content-${tabName}`).classList.remove('hidden');
+        
+        const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+        activeBtn.classList.remove('border-transparent', 'text-gray-500');
+        activeBtn.classList.add('border-brand', 'text-brand');
+        const url = new URL(window.location);
+        url.searchParams.set('tab', tabName);
+        window.history.pushState({}, '', url);
+    }
+
+ 
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeTab = urlParams.get('tab') || 'bookmarks';
+        switchTab(activeTab);
+    });
+</script>
