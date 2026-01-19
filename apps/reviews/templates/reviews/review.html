@@ -100,12 +100,14 @@
                 <textarea name="comment"
                           rows="4"
                           required
-                          class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition"
+                          class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 
+                            focus:ring-brand focus:border-brand outline-none transition"
                           placeholder="Share your experience...">{{ user_review.comment|default:"" }}</textarea>
             </div>
 
             <button type="submit"
-                    class="px-5 py-2.5 bg-brand text-white font-semibold rounded-lg hover:bg-brand-dark transition shadow-sm">
+                    class="px-5 py-2.5 bg-brand text-white font-semibold rounded-lg 
+                        hover:bg-brand-dark transition shadow-sm">
                 {% if user_review %}
                     Update Review
                 {% else %}
@@ -131,7 +133,8 @@
     {% else %}
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-8 text-center text-gray-600">
             <p class="mb-2">Want to leave a review?</p>
-            <a href="{% url 'login' %}" class="inline-block px-6 py-2 bg-white border border-gray-300 rounded-lg font-semibold text-brand hover:bg-gray-50 transition shadow-sm">
+            <a href="{% url 'login' %}" class="inline-block px-6 py-2 bg-white border 
+                border-gray-300 rounded-lg font-semibold text-brand hover:bg-gray-50 transition shadow-sm">
                 Log in now
             </a>
         </div>
