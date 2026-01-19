@@ -40,4 +40,4 @@ def toggle_visited(*, user, restaurant_id: int) -> bool:
 
     return True
 
-    
+
