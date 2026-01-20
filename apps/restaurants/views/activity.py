@@ -38,14 +38,14 @@ class MyActivityView(LoginRequiredMixin, TemplateView):
             base_qs
             .filter(bookmarked_by__user=user)
             .distinct()
-            .order_by("-created_at")
+            .order_by("-bookmarked_by__created_at")
         )
 
         visited = (
             base_qs
             .filter(visited_by__user=user)
             .distinct()
-            .order_by("-created_at")
+            .order_by("-visited_by__visited_at")
         )
 
         return {

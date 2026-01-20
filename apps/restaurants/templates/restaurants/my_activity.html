@@ -12,20 +12,18 @@
     </div>
 
     <div class="flex border-b border-gray-200 mb-8" id="activityTabs">
-        <button onclick="switchTab('bookmarks')" 
-                id="tab-btn-bookmarks"
+        <button id="tab-btn-bookmarks"
                 class="px-6 py-3 font-semibold text-sm transition-colors border-b-2 border-transparent text-gray-500 hover:text-gray-700">
             <i class="fa-solid fa-bookmark mr-2"></i> Bookmarks
         </button>
-        <button onclick="switchTab('visited')" 
-                id="tab-btn-visited"
+        <button id="tab-btn-visited"
                 class="px-6 py-3 font-semibold text-sm transition-colors border-b-2 border-transparent text-gray-500 hover:text-gray-700">
             <i class="fa-solid fa-check mr-2"></i> Visited
         </button>
     </div>
 
     <div id="content-bookmarks" class="tab-content hidden">
-        {% if bookmarks_page %}
+        {% if bookmarks_page.object_list %}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for restaurant in bookmarks_page %}
                     {% include "restaurants/restaurant_card.html" with restaurant=restaurant %}
@@ -40,7 +38,7 @@
     </div>
 
     <div id="content-visited" class="tab-content hidden">
-        {% if visited_page %}
+        {% if visited_page.object_list %}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for restaurant in visited_page %}
                     {% include "restaurants/restaurant_card.html" with restaurant=restaurant %}

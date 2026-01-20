@@ -28,11 +28,13 @@ class MyActivityTests(TestCase):
             )
             self.restaurants.append(restaurant)
 
-        for i in range(10):
-            Bookmark.objects.create(user=self.user, restaurant=self.restaurants[i])
+        Bookmark.objects.bulk_create([
+            Bookmark(user=self.user, restaurant=self.restaurants[i]) for i in range(10)
+        ])
 
-        for i in range(10, 15):
-            Visited.objects.create(user=self.user, restaurant=self.restaurants[i])
+        Visited.objects.bulk_create([
+            Visited(user=self.user, restaurant=self.restaurants[i]) for i in range(10, 15)
+        ])
 
         self.url = reverse("restaurants:my_activity")
 

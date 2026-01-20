@@ -10,17 +10,29 @@
         document.getElementById(`content-${tabName}`).classList.remove('hidden');
         
         const activeBtn = document.getElementById(`tab-btn-${tabName}`);
-        activeBtn.classList.remove('border-transparent', 'text-gray-500');
-        activeBtn.classList.add('border-brand', 'text-brand');
+            activeBtn.classList.remove('border-transparent', 'text-gray-500');
+            activeBtn.classList.add('border-brand', 'text-brand');
         const url = new URL(window.location);
-        url.searchParams.set('tab', tabName);
-        window.history.pushState({}, '', url);
+            url.searchParams.set('tab', tabName);
+            window.history.pushState({}, '', url);
     }
 
  
     document.addEventListener('DOMContentLoaded', () => {
+
+        document
+            .getElementById('tab-btn-bookmarks')
+            .addEventListener('click', () => switchTab('bookmarks'));
+
+        document
+            .getElementById('tab-btn-visited')
+            .addEventListener('click', () => switchTab('visited'));
+
+
         const urlParams = new URLSearchParams(window.location.search);
-        const activeTab = urlParams.get('tab') || 'bookmarks';
+        const tab = urlParams.get('tab');
+        const validTabs = ['bookmarks', 'visited'];
+        const activeTab = validTabs.includes(tab) ? tab : 'bookmarks';
         switchTab(activeTab);
     });
 </script>
