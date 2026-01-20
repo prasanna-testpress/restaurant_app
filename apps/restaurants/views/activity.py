@@ -57,5 +57,3 @@ class MyActivityView(LoginRequiredMixin, TemplateView):
         paginator = Paginator(queryset, per_page)
         page_number = self.request.GET.get(page_param)
         return paginator.get_page(page_number)
-        
-        
