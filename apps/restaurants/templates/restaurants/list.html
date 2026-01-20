@@ -89,10 +89,9 @@
                 <select name="min_rating"
                     class="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-brand">
                     <option value="">All Ratings</option>
-                    <option value="4.5" {% if request.GET.min_rating == "4.5" %}selected{% endif %}>4.5 ★ & up</option>
-                    <option value="4" {% if request.GET.min_rating == "4" %}selected{% endif %}>4 ★ & up</option>
-                    <option value="3" {% if request.GET.min_rating == "3" %}selected{% endif %}>3 ★ & up</option>
-                    <option value="2" {% if request.GET.min_rating == "2" %}selected{% endif %}>2 ★ & up</option>
+                    {% for rating in rating_choices %}
+<option value="{{ rating }}" {% if request.GET.min_rating == rating %}selected{% endif %}>{{ rating }} ★ & up</option>
+{% endfor %}
                 </select>
             </div>
 

@@ -4,6 +4,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from apps.restaurants.models import Restaurant,Cuisine
 from apps.restaurants.filters import RestaurantFilter
+from apps.reviews.models import Review
 
 User = get_user_model()
 
@@ -35,6 +36,76 @@ class RestaurantFilterTests(TestCase):
 
         self.assertEqual(results.count(), 1)
         self.assertEqual(results.first().city, "Chennai")
+
+    def test_filter_by_min_rating(self):
+        user1 = User.objects.create_user(
+            email="test@example.com",
+            password="password",
+        )
+
+        user2 = User.objects.create_user(
+            email="tewwst@example.com",
+            password="password",
+        )
+
+        low_rated = Restaurant.objects.create(
+            name="Low Rated",
+            city="Chennai",
+            address="Addr",
+            cost_for_two=200,
+            veg_type="veg",
+        )
+
+        high_rated = Restaurant.objects.create(
+            name="High Rated",
+            city="Chennai",
+            address="Addr",
+            cost_for_two=300,
+            veg_type="veg",
+        )
+
+        no_reviews = Restaurant.objects.create(
+            name="No Reviews",
+            city="Chennai",
+            address="Addr",
+            cost_for_two=250,
+            veg_type="veg",
+        )
+
+       
+        Review.objects.create(
+            restaurant=low_rated,
+            user=user1,
+            rating=2,
+            comment="Not great",
+        )
+
+        Review.objects.create(
+            restaurant=high_rated,
+            user=user2,
+            rating=4,
+            comment="Good",
+        )
+        Review.objects.create(
+            restaurant=high_rated,
+            user=user1,
+            rating=5,
+            comment="Excellent",
+        )
+
+        queryset = Restaurant.objects.all()
+
+        filterset = RestaurantFilter(
+            data={"min_rating": 4},
+            queryset=queryset,
+        )
+
+        results = filterset.qs
+
+        self.assertEqual(results.count(), 1)
+        self.assertEqual(results.first(), high_rated)
+        self.assertNotIn(no_reviews, results)
+
 
     def test_spotlight_restaurants_appear_first_by_default(self):
         Restaurant.objects.create(

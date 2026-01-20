@@ -20,7 +20,6 @@ class RestaurantListView(ListView):
         qs=(Restaurant.objects.prefetch_related(
                 "images",
                 "cuisines", )
-                .annotate(rating=Avg("reviews__rating"))
             )
 
         if self.request.user.is_authenticated:
@@ -72,6 +71,7 @@ class RestaurantListView(ListView):
         query_params = self.request.GET.copy()
         query_params.pop("page", None)
         context["query_params"] = query_params
+        context["rating_choices"] = ["4.5", "4", "3", "2"]
 
         return context
 

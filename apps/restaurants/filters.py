@@ -1,3 +1,4 @@
+from django.db.models import Avg
 import django_filters
 
 from apps.restaurants.models import Restaurant
@@ -20,8 +21,7 @@ class RestaurantFilter(django_filters.FilterSet):
     )
 
     min_rating = django_filters.NumberFilter(
-        field_name="rating",
-        lookup_expr="gte",
+        method="filter_min_rating",
     )
 
     sort = django_filters.ChoiceFilter(
@@ -47,6 +47,11 @@ class RestaurantFilter(django_filters.FilterSet):
         if value == "cost_high":
             return queryset.order_by("-cost_for_two")
         return queryset
+
+    def filter_min_rating(self, queryset, name, value):
+        return queryset.annotate(
+            rating=Avg("reviews__rating")
+        ).filter(rating__gte=value)
 
     @property
     def qs(self):
