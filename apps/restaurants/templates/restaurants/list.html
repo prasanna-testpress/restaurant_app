@@ -81,6 +81,21 @@
                 <input type="checkbox" name="is_open" value="true" {% if request.GET.is_open == 'true' %}checked{% endif %} class="rounded text-brand focus:ring-brand h-4 w-4">
                 <span class="text-gray-700 text-sm font-medium">Show Open Only</span>
             </label>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Minimum Rating
+                </label>
+
+                <select name="min_rating"
+                    class="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-brand">
+                    <option value="">All Ratings</option>
+                    <option value="4.5" {% if request.GET.min_rating == "4.5" %}selected{% endif %}>4.5 ★ & up</option>
+                    <option value="4" {% if request.GET.min_rating == "4" %}selected{% endif %}>4 ★ & up</option>
+                    <option value="3" {% if request.GET.min_rating == "3" %}selected{% endif %}>3 ★ & up</option>
+                    <option value="2" {% if request.GET.min_rating == "2" %}selected{% endif %}>2 ★ & up</option>
+                </select>
+            </div>
+
 
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Sort By</label>

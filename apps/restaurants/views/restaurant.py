@@ -20,6 +20,7 @@ class RestaurantListView(ListView):
         qs=(Restaurant.objects.prefetch_related(
                 "images",
                 "cuisines", )
+                .annotate(rating=Avg("reviews__rating"))
             )
 
         if self.request.user.is_authenticated:

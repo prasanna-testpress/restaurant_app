@@ -19,6 +19,11 @@ class RestaurantFilter(django_filters.FilterSet):
         field_name="is_open",
     )
 
+    min_rating = django_filters.NumberFilter(
+        field_name="rating",
+        lookup_expr="gte",
+    )
+
     sort = django_filters.ChoiceFilter(
         method="filter_sort",
         choices=(
