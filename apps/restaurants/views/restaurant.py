@@ -71,6 +71,7 @@ class RestaurantListView(ListView):
         query_params = self.request.GET.copy()
         query_params.pop("page", None)
         context["query_params"] = query_params
+        context["rating_choices"] = ["4.5", "4", "3", "2"]
 
         return context
 
