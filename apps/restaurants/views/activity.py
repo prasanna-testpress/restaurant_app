@@ -58,4 +58,4 @@ class MyVisitedView(LoginRequiredMixin, UserRestaurantActivityMixin, ListView):
             "empty_message": "Mark restaurants as visited to track your culinary journey.",
             "empty_icon": "fa-solid fa-utensils"
         })
-        return context 
+        return context
