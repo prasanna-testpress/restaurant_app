@@ -16,12 +16,13 @@ class VisitedAdmin(admin.ModelAdmin):
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     ordering = ["email"]
-    list_display = ["email", "is_staff", "is_active", "created_at"]
+    list_display = ["email", "first_name", "last_name", "is_staff", "is_active", "created_at"]
     list_filter = ["is_staff", "is_active"]
-    search_fields = ["email"]
+    search_fields = ["email", "first_name", "last_name"]
 
     fieldsets = (
         (None, {"fields": ("email", "password")}),
+         ("Personal info", {"fields": ("first_name", "last_name")}),
         (
             "Permissions",
             {
