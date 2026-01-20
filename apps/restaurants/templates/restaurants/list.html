@@ -90,8 +90,8 @@
                     class="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-brand">
                     <option value="">All Ratings</option>
                     {% for rating in rating_choices %}
-<option value="{{ rating }}" {% if request.GET.min_rating == rating %}selected{% endif %}>{{ rating }} ★ & up</option>
-{% endfor %}
+                        <option value="{{ rating }}" {% if request.GET.min_rating == rating %}selected{% endif %}>{{ rating }} ★ & up</option>
+                    {% endfor %}
                 </select>
             </div>
 
