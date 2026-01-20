@@ -6,6 +6,8 @@ from apps.restaurants.views import (
     BookmarkToggleView,
     VisitedToggleView,
     MyActivityView,
+    MyBookmarksView,
+    MyVisitedView,
 )
 
 
@@ -16,4 +18,7 @@ urlpatterns = [
     path("<int:restaurant_id>/bookmark/", BookmarkToggleView.as_view(), name="bookmark"),
     path("<int:restaurant_id>/visited/", VisitedToggleView.as_view(), name="visited"),
     path("my-activity/", MyActivityView.as_view(), name="my_activity"),
+    path("my-activity/bookmarks/", MyBookmarksView.as_view(), name="my_bookmarks"),
+    path("my-activity/visited/", MyVisitedView.as_view(), name="my_visited"),
+
 ]

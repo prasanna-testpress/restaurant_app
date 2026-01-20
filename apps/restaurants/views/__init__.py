@@ -1,7 +1,7 @@
 from .restaurant import RestaurantListView, RestaurantDetailView
 from .bookmark import BookmarkToggleView
 from .visited import VisitedToggleView
-from .activity import MyActivityView
+from .activity import MyActivityView, MyBookmarksView, MyVisitedView
 
 __all__ = [
     "RestaurantListView",
@@ -9,4 +9,6 @@ __all__ = [
     "BookmarkToggleView",
     "VisitedToggleView",   
     "MyActivityView",
+    "MyBookmarksView",
+    "MyVisitedView",
 ]
