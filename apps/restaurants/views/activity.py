@@ -59,4 +59,5 @@ class MyVisitedView(LoginRequiredMixin, UserRestaurantActivityMixin, ListView):
             "empty_icon": "fa-solid fa-utensils"
         })
         return context   
+
         
