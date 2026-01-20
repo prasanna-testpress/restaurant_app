@@ -1,0 +1,69 @@
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const content = document.getElementById("activity-content");
+    const tabs = document.querySelectorAll(".tab-btn");
+
+    // 1. Fetch & Render Function
+    async function loadTab(url) {
+        content.style.opacity = "0.5"; // Visual feedback
+
+        try {
+            const response = await fetch(url, {
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            });
+            
+            if (!response.ok) throw new Error("Network response was not ok");
+            
+            const html = await response.text();
+            content.innerHTML = html;
+            
+            // Re-bind pagination links so they don't reload the page
+            attachPaginationListeners();
+
+        } catch (error) {
+            console.error("Error:", error);
+        } finally {
+            content.style.opacity = "1";
+        }
+    }
+
+    // 2. Handle Tab Click
+    function handleTabClick(e) {
+        const clickedBtn = e.currentTarget;
+        const url = clickedBtn.dataset.url;
+
+        // Reset UI
+        tabs.forEach(btn => {
+            btn.classList.remove("border-brand", "text-brand");
+            btn.classList.add("border-transparent", "text-gray-500");
+        });
+
+        // Activate UI
+        clickedBtn.classList.remove("border-transparent", "text-gray-500");
+        clickedBtn.classList.add("border-brand", "text-brand");
+
+        loadTab(url);
+    }
+
+    // 3. AJAX Pagination Handler
+    function attachPaginationListeners() {
+        const links = content.querySelectorAll(".pagination-link");
+        links.forEach(link => {
+            link.addEventListener("click", (e) => {
+                e.preventDefault();
+                loadTab(link.getAttribute("href"));
+                // Scroll to top of container smoothly
+                content.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    }
+
+    // 4. Initialize
+    tabs.forEach(btn => btn.addEventListener("click", handleTabClick));
+    
+    // Load default tab
+    const defaultTab = document.getElementById("tab-bookmarks");
+    if(defaultTab) loadTab(defaultTab.dataset.url);
+});
+</script>

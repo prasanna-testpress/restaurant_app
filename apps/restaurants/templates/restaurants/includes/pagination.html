@@ -1,0 +1,32 @@
+{% if page_obj.has_other_pages %}
+<div class="flex justify-center mt-12">
+    <nav class="flex items-center gap-2">
+        
+        {% if page_obj.has_previous %}
+            <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}" 
+               class="pagination-link px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition shadow-sm">
+               Previous
+            </a>
+        {% else %}
+            <span class="px-4 py-2 bg-gray-50 border border-gray-100 rounded-lg text-sm font-medium text-gray-300 cursor-not-allowed">
+               Previous
+            </span>
+        {% endif %}
+
+        <span class="px-4 py-2 text-sm text-gray-500 font-medium">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="{{ request.path }}?page={{ page_obj.next_page_number }}" 
+               class="pagination-link px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition shadow-sm">
+               Next
+            </a>
+        {% else %}
+             <span class="px-4 py-2 bg-gray-50 border border-gray-100 rounded-lg text-sm font-medium text-gray-300 cursor-not-allowed">
+                Next
+             </span>
+        {% endif %}
+    </nav>
+</div>
+{% endif %}
