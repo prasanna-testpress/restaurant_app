@@ -15,7 +15,8 @@ class SignupTests(TestCase):
     def test_signup_creates_user(self):
         response = self.client.post(
             reverse("signup"),
-            {
+            {   "first_name":"test",
+                "last_name":"user",
                 "email": "user@example.com",
                 "password1": TEST_PASSWORD,
                 "password2": TEST_PASSWORD,
@@ -29,6 +30,8 @@ class SignupTests(TestCase):
         response = self.client.post(
             reverse("signup"),
             {
+                "first_name":"test",
+                "last_name":"user",
                 "email": "loggedin@example.com",
                 "password1": TEST_PASSWORD,
                 "password2": TEST_PASSWORD,
@@ -46,6 +49,8 @@ class SignupTests(TestCase):
         response = self.client.post(
             reverse("signup"),
             {
+                "first_name":"test",
+                "last_name":"user",
                 "email": "mismatch@example.com",
                 "password1": TEST_PASSWORD,
                 "password2": "wrong-password",
