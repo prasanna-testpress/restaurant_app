@@ -59,6 +59,6 @@ class RestaurantFilter(django_filters.FilterSet):
 
         # Default ordering: spotlight first
         if not self.data.get("sort"):
-            return queryset.order_by("-is_spotlight", "name")
+            return queryset.order_by("name")
 
         return queryset
