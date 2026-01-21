@@ -11,10 +11,12 @@ django-cloudinary-storage==0.3.0
 django-environ==0.12.0
 django-filter==25.2
 django-imagekit==6.0.0
+gunicorn==23.0.0
 h11==0.16.0
 httpcore==1.0.9
 httpx==0.28.1
 idna==3.11
+packaging==25.0
 pilkit==3.0
 pillow==12.1.0
 psycopg==3.3.2
