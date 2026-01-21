@@ -6,8 +6,8 @@ DEBUG = False
 SECRET_KEY = env("SECRET_KEY")
 
 ALLOWED_HOSTS = [
-    env("ALLOWED_HOST", "127.0.0.1"),
-    env("RENDER_EXTERNAL_HOSTNAME"), 
+    env("ALLOWED_HOST", default="127.0.0.1"),
+    env("RENDER_EXTERNAL_HOSTNAME", default="127.0.0.1"), 
 ]
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -30,7 +30,7 @@ DATABASES = {
         "USER": env("DB_USER"),
         "PASSWORD": env("DB_PASSWORD"),
         "HOST": env("DB_HOST"),
-        "PORT": env("DB_PORT", "5432"),
+        "PORT": env("DB_PORT", default="5432"),
     }
 }
 
