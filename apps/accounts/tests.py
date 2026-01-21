@@ -227,8 +227,13 @@ class ProfileViewTests(TestCase):
         self.assertContains(response, "User")
         self.assertContains(response, "user@test.com")
 
+    def test_anonymous_user_redirected(self):
+        self.client.logout()
+        response = self.client.get(reverse("profile"))
 
-class ProfileEditViewTests(TestCase):
+        self.assertEqual(response.status_code, 302)
+
+class ProfileUpdateViewTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             email="user@test.com",
@@ -245,12 +250,10 @@ class ProfileEditViewTests(TestCase):
         self.assertContains(response, "Old")
         self.assertContains(response, "Name")
 
-
     def test_user_can_update_profile(self):
         response = self.client.post(
             reverse("profile_edit"),
             {
-                "update_profile": "1",
                 "first_name": "New",
                 "last_name": "Name",
                 "email": "user@test.com",
@@ -267,7 +270,6 @@ class ProfileEditViewTests(TestCase):
         response = self.client.post(
             reverse("profile_edit"),
             {
-                "update_profile": "1",
                 "first_name": "",
                 "last_name": "",
                 "email": "invalid-email",
@@ -275,14 +277,27 @@ class ProfileEditViewTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "error")
+        self.assertContains(response, "Enter a valid email address")
 
+    def test_anonymous_user_redirected(self):
+        self.client.logout()
+        response = self.client.get(reverse("profile_edit"))
+
+        self.assertEqual(response.status_code, 302)
+
+
+class PasswordChangeViewTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email="user@test.com",
+            password="password123",
+        )
+        self.client.login(email="user@test.com", password="password123")
 
     def test_user_can_change_password(self):
         response = self.client.post(
-            reverse("profile_edit"),
+            reverse("profile_password_change"),
             {
-                "change_password": "1",
                 "old_password": "password123",
                 "new_password1": "NewStrongPass123!",
                 "new_password2": "NewStrongPass123!",
@@ -296,9 +311,8 @@ class ProfileEditViewTests(TestCase):
 
     def test_invalid_password_change_shows_errors(self):
         response = self.client.post(
-            reverse("profile_edit"),
+            reverse("profile_password_change"),
             {
-                "change_password": "1",
                 "old_password": "wrong-password",
                 "new_password1": "short",
                 "new_password2": "short",
@@ -306,10 +320,12 @@ class ProfileEditViewTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "error")
+        self.assertContains(response, "incorrect")
+        self.assertContains(response, "too short")
 
     def test_anonymous_user_redirected(self):
         self.client.logout()
-        response = self.client.get(reverse("profile_edit"))
+        response = self.client.get(reverse("profile_password_change"))
 
         self.assertEqual(response.status_code, 302)
+
