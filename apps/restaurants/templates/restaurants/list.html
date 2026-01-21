@@ -17,9 +17,9 @@
     </div>
 </section>
 
-<div class="container mx-auto px-4 pb-12 flex flex-col lg:flex-row gap-8 items-start">
+<div class="container mx-auto px-4 pb-12 flex flex-col lg:flex-row gap-8 items-start overflow-hidden">
 
-    <aside class="w-full lg:w-64 flex-shrink-0 bg-white p-6 rounded-xl shadow-sm border border-gray-100 lg:sticky lg:top-24">
+    <aside class="w-full lg:w-64 flex-shrink-0 bg-white p-6 rounded-xl shadow-sm border border-gray-100 lg:sticky lg:top-24 z-10">
         
         <div class="flex justify-between items-center mb-6 pb-3 border-b border-gray-100">
             <h3 class="font-bold text-lg text-gray-800">
@@ -111,7 +111,7 @@
         </form>
     </aside>
 
-    <main class="flex-1">
+    <main class="flex-1 min-w-0 m-auto">
         
         <section class="mb-10 border-b border-gray-200 pb-8">
             <div class="flex justify-between items-end mb-4">
@@ -122,9 +122,9 @@
             </div>
 
             {% if spotlight_restaurants %}
-                <div class="flex gap-6 overflow-x-auto pb-4 snap-x">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {% for restaurant in spotlight_restaurants %}
-                        <div class="min-w-[300px] w-[300px] snap-center">
+                        <div class="h-full">
                             {% include "restaurants/restaurant_card.html" with restaurant=restaurant %}
                         </div>
                     {% endfor %}
@@ -143,10 +143,11 @@
                 <span class="text-gray-500 text-sm">Showing <span class="font-bold text-gray-800">{{ page_obj.paginator.count }}</span> results</span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {% for restaurant in restaurants %}
                     
-                    {% include "restaurants/restaurant_card.html" with restaurant=restaurant %}
+                    <div class="h-full w-full"> {% include "restaurants/restaurant_card.html" with restaurant=restaurant %}
+                    </div>
                 
                 {% empty %}
                     <div class="col-span-full flex flex-col items-center justify-center py-16 bg-white rounded-xl border border-dashed border-gray-300">
@@ -163,18 +164,18 @@
             {% if is_paginated %}
             <div class="flex justify-center mt-12 gap-2">
                 {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}&{{ query_params.urlencode }}" 
+                <a href="?page={{ page_obj.previous_page_number }}{% if query_params %}&{{ query_params.urlencode }}{% endif %}" 
                    class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-600 hover:border-brand hover:text-brand transition">
                     <i class="fa-solid fa-arrow-left mr-1"></i> Prev
                 </a>
                 {% endif %}
 
-                <span class="px-4 py-2 text-gray-500">
+                <span class="px-4 py-2 text-gray-500 bg-gray-50 rounded-lg border border-transparent">
                     Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
                 </span>
 
                 {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}&{{ query_params.urlencode }}" 
+                <a href="?page={{ page_obj.next_page_number }}{% if query_params %}&{{ query_params.urlencode }}{% endif %}" 
                    class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-600 hover:border-brand hover:text-brand transition">
                     Next <i class="fa-solid fa-arrow-right ml-1"></i>
                 </a>
