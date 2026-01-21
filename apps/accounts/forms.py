@@ -26,8 +26,20 @@ class SignupForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["email"]
+        fields = ["first_name", "last_name", "email"]
         widgets = {
+            "first_name": forms.TextInput(
+                attrs={
+                    "placeholder": "Enter your first name",
+                    "autocomplete": "first-name",
+                }
+            ),
+            "last_name": forms.TextInput(
+                attrs={
+                    "placeholder": "Enter your last name",
+                    "autocomplete": "last-name",
+                }
+            ),
             "email": forms.EmailInput(
                 attrs={
                     "placeholder": "Enter your email address",
@@ -35,6 +47,18 @@ class SignupForm(forms.ModelForm):
                 }
             )
         }
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get("first_name", "").strip()
+        if not first_name:
+            raise forms.ValidationError("This field cannot be blank.")
+        return first_name
+
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get("last_name", "").strip()
+        if not last_name:
+            raise forms.ValidationError("This field cannot be blank.")
+        return last_name
 
     def clean(self):
         cleaned_data = super().clean()
