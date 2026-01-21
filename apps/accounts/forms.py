@@ -26,8 +26,20 @@ class SignupForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["email"]
+        fields = ["first_name", "last_name", "email"]
         widgets = {
+            "first_name": forms.TextInput(
+                attrs={
+                    "placeholder": "Enter your first name",
+                    "autocomplete": "first-name",
+                }
+            ),
+            "last_name": forms.TextInput(
+                attrs={
+                    "placeholder": "Enter your last name",
+                    "autocomplete": "last-name",
+                }
+            ),
             "email": forms.EmailInput(
                 attrs={
                     "placeholder": "Enter your email address",

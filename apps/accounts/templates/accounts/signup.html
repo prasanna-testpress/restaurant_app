@@ -27,6 +27,11 @@
    <form method="post" novalidate class="space-y-5">
     {% csrf_token %}
 
+    <div class="grid grid-cols-2 gap-4">
+        {% include "components/form_input.html" with field=form.first_name %}
+        {% include "components/form_input.html" with field=form.last_name %}
+    </div>
+
     {% include "components/form_input.html" with field=form.email %}
     {% include "components/form_input.html" with field=form.password1 %}
     {% include "components/form_input.html" with field=form.password2 %}
