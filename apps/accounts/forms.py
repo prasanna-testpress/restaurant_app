@@ -99,3 +99,18 @@ class LoginForm(forms.Form):
 
     def get_user(self):
         return self.user
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "email"]
+
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+
+        if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError("This email is already in use.")
+
+        return email
+

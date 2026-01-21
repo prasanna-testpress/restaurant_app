@@ -207,3 +207,125 @@ class LogoutTests(TestCase):
 
         # Accept redirect or method-not-allowed (both valid)
         self.assertIn(response.status_code, (302, 405))
+
+
+class ProfileViewTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email="user@test.com",
+            password="password123",
+            first_name="Test",
+            last_name="User",
+        )
+        self.client.login(email="user@test.com", password="password123")
+
+    def test_profile_page_loads(self):
+        response = self.client.get(reverse("profile"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Test")
+        self.assertContains(response, "User")
+        self.assertContains(response, "user@test.com")
+
+    def test_anonymous_user_redirected(self):
+        self.client.logout()
+        response = self.client.get(reverse("profile"))
+
+        self.assertEqual(response.status_code, 302)
+
+class ProfileUpdateViewTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email="user@test.com",
+            password="password123",
+            first_name="Old",
+            last_name="Name",
+        )
+        self.client.login(email="user@test.com", password="password123")
+
+    def test_profile_edit_page_loads(self):
+        response = self.client.get(reverse("profile_edit"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Old")
+        self.assertContains(response, "Name")
+
+    def test_user_can_update_profile(self):
+        response = self.client.post(
+            reverse("profile_edit"),
+            {
+                "first_name": "New",
+                "last_name": "Name",
+                "email": "user@test.com",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.first_name, "New")
+        self.assertEqual(self.user.last_name, "Name")
+
+    def test_invalid_profile_update_rerenders_form(self):
+        response = self.client.post(
+            reverse("profile_edit"),
+            {
+                "first_name": "",
+                "last_name": "",
+                "email": "invalid-email",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Enter a valid email address")
+
+    def test_anonymous_user_redirected(self):
+        self.client.logout()
+        response = self.client.get(reverse("profile_edit"))
+
+        self.assertEqual(response.status_code, 302)
+
+
+class PasswordChangeViewTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email="user@test.com",
+            password="password123",
+        )
+        self.client.login(email="user@test.com", password="password123")
+
+    def test_user_can_change_password(self):
+        response = self.client.post(
+            reverse("profile_password_change"),
+            {
+                "old_password": "password123",
+                "new_password1": "NewStrongPass123!",
+                "new_password2": "NewStrongPass123!",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password("NewStrongPass123!"))
+
+    def test_invalid_password_change_shows_errors(self):
+        response = self.client.post(
+            reverse("profile_password_change"),
+            {
+                "old_password": "wrong-password",
+                "new_password1": "short",
+                "new_password2": "short",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "incorrect")
+        self.assertContains(response, "too short")
+
+    def test_anonymous_user_redirected(self):
+        self.client.logout()
+        response = self.client.get(reverse("profile_password_change"))
+
+        self.assertEqual(response.status_code, 302)
+
