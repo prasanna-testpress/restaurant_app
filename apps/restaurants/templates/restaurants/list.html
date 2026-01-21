@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<section class="bg-white border-b border-gray-200 py-12 mb-8">
+<section class="bg-white border-b border-gray-200 py-10 mb-8">
     <div class="container mx-auto px-4 text-center">
         <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Order Food Online</h1>
         <p class="text-gray-500 text-lg">
@@ -17,98 +17,115 @@
     </div>
 </section>
 
-<div class="container mx-auto px-4 pb-12 flex flex-col lg:flex-row gap-8 items-start overflow-hidden">
+<div class="container mx-auto px-4 pb-12 flex flex-col lg:flex-row gap-8 items-start">
 
-    <aside class="w-full lg:w-64 flex-shrink-0 bg-white p-6 rounded-xl shadow-sm border border-gray-100 lg:sticky lg:top-24 z-10">
+    <aside class="w-full lg:w-72 flex-shrink-0 lg:sticky lg:top-24 z-20">
         
-        <div class="flex justify-between items-center mb-6 pb-3 border-b border-gray-100">
-            <h3 class="font-bold text-lg text-gray-800">
-                <i class="fa-solid fa-filter mr-2 text-brand"></i>Filters
-            </h3>
-            <a href="{% url 'restaurants:restaurant_list' %}" class="text-sm text-brand font-medium hover:underline">Clear all</a>
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+            
+            <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+                <h3 class="font-bold text-lg text-gray-800 flex items-center">
+                    <span class="bg-brand/10 text-brand w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">
+                        <i class="fa-solid fa-sliders"></i>
+                    </span>
+                    Filters
+                </h3>
+                <a href="{% url 'restaurants:restaurant_list' %}" class="text-xs font-bold text-red-500 hover:text-red-600 transition uppercase tracking-wide">
+                    Reset
+                </a>
+            </div>
+
+            <div class="space-y-6 lg:max-h-[calc(100vh-15rem)] lg:overflow-y-auto">
+                <form method="get" class="space-y-6 pr-2">
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">City</label>
+                        <div class="relative group/input">
+                            <span class="absolute left-3 top-2.5 text-gray-400"><i class="fa-solid fa-location-crosshairs"></i></span>
+                            <input list="city_list" name="city" value="{{ request.GET.city|default:'' }}" 
+                                   class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:bg-white focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+                                   placeholder="Search city...">
+                        </div>
+                        <datalist id="city_list">
+                            {% for city in cities %}<option value="{{ city }}">{% endfor %}
+                        </datalist>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Cuisine</label>
+                        <div class="relative group/input">
+                            <span class="absolute left-3 top-2.5 text-gray-400"><i class="fa-solid fa-utensils"></i></span>
+                            <input list="cuisine_list" name="cuisine" value="{{ request.GET.cuisine|default:'' }}" 
+                                   class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:bg-white focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+                                   placeholder="e.g. Italian">
+                        </div>
+                        <datalist id="cuisine_list">
+                            {% for cuisine in cuisines %}<option value="{{ cuisine }}">{% endfor %}
+                        </datalist>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Dietary</label>
+                        <div class="space-y-1">
+                            <label class="flex items-center p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="veg_type" value="" {% if not request.GET.veg_type %}checked{% endif %} class="text-brand focus:ring-brand w-4 h-4 border-gray-300">
+                                <span class="ml-3 text-gray-600 text-sm font-medium">All</span>
+                            </label>
+                            
+                            <label class="flex items-center p-2 rounded-lg hover:bg-green-50 cursor-pointer">
+                                <input type="radio" name="veg_type" value="veg" {% if request.GET.veg_type == 'veg' %}checked{% endif %} class="text-green-600 focus:ring-green-500 w-4 h-4 border-gray-300">
+                                <span class="ml-3 text-gray-600 text-sm font-medium flex items-center">
+                                    <i class="fa-solid fa-leaf text-green-500 w-5"></i> Pure Veg
+                                </span>
+                            </label>
+                            
+                            <label class="flex items-center p-2 rounded-lg hover:bg-red-50 cursor-pointer">
+                                <input type="radio" name="veg_type" value="non_veg" {% if request.GET.veg_type == 'non_veg' %}checked{% endif %} class="text-red-600 focus:ring-red-500 w-4 h-4 border-gray-300">
+                                <span class="ml-3 text-gray-600 text-sm font-medium flex items-center">
+                                    <i class="fa-solid fa-drumstick-bite text-red-500 w-5"></i> Non-Veg
+                                </span>
+                            </label>
+
+                            <label class="flex items-center p-2 rounded-lg hover:bg-emerald-50 cursor-pointer">
+                                <input type="radio" name="veg_type" value="vegan" {% if request.GET.veg_type == 'vegan' %}checked{% endif %} class="text-emerald-600 focus:ring-emerald-500 w-4 h-4 border-gray-300">
+                                <span class="ml-3 text-gray-600 text-sm font-medium flex items-center">
+                                    <i class="fa-solid fa-seedling text-emerald-500 w-5"></i> Vegan
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <label class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100 cursor-pointer hover:border-brand/30 transition">
+                        <span class="text-gray-700 text-sm font-semibold">Open Now</span>
+                        <input type="checkbox" name="is_open" value="true" {% if request.GET.is_open == 'true' %}checked{% endif %} class="rounded text-brand focus:ring-brand h-5 w-5 border-gray-300">
+                    </label>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Rating</label>
+                        <select name="min_rating" class="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand">
+                            <option value="">Any Rating</option>
+                            {% for rating in rating_choices %}
+                                <option value="{{ rating }}" {% if request.GET.min_rating == rating %}selected{% endif %}>{{ rating }}+ Stars</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Sort By</label>
+                        <select name="sort" class="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand">
+                            <option value="">Relevance</option>
+                            <option value="cost_low" {% if request.GET.sort == 'cost_low' %}selected{% endif %}>Cost: Low to High</option>
+                            <option value="cost_high" {% if request.GET.sort == 'cost_high' %}selected{% endif %}>Cost: High to Low</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-brand text-white font-bold rounded-lg hover:bg-brand-dark transition shadow-lg shadow-brand/20">
+                        Apply Filters
+                    </button>
+                    
+                </form>
+            </div>
         </div>
-
-        <form method="get" class="space-y-6">
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">City</label>
-                <div class="relative">
-                    <span class="absolute left-3 top-3 text-gray-400"><i class="fa-solid fa-location-crosshairs"></i></span>
-                    <input list="city_list" name="city" value="{{ request.GET.city|default:'' }}" 
-                           class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
-                           placeholder="Search city...">
-                </div>
-                <datalist id="city_list">
-                    {% for city in cities %}<option value="{{ city }}">{% endfor %}
-                </datalist>
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Cuisine</label>
-                <div class="relative">
-                    <span class="absolute left-3 top-3 text-gray-400"><i class="fa-solid fa-utensils"></i></span>
-                    <input list="cuisine_list" name="cuisine" value="{{ request.GET.cuisine|default:'' }}" 
-                           class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
-                           placeholder="Italian, Chinese...">
-                </div>
-                <datalist id="cuisine_list">
-                    {% for cuisine in cuisines %}<option value="{{ cuisine }}">{% endfor %}
-                </datalist>
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Dietary</label>
-                <div class="space-y-2">
-                    <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="radio" name="veg_type" value="" {% if not request.GET.veg_type %}checked{% endif %} class="text-brand focus:ring-brand cursor-pointer">
-                        <span class="text-gray-600 text-sm group-hover:text-brand transition">All</span>
-                    </label>
-                    <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="radio" name="veg_type" value="veg" {% if request.GET.veg_type == 'veg' %}checked{% endif %} class="text-brand focus:ring-brand cursor-pointer">
-                        <span class="text-gray-600 text-sm group-hover:text-brand transition"><i class="fa-solid fa-leaf text-green-500 mr-1 w-4 text-center"></i> Pure Veg</span>
-                    </label>
-                    <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="radio" name="veg_type" value="non_veg" {% if request.GET.veg_type == 'non_veg' %}checked{% endif %} class="text-brand focus:ring-brand cursor-pointer">
-                        <span class="text-gray-600 text-sm group-hover:text-brand transition"><i class="fa-solid fa-drumstick-bite text-red-500 mr-1 w-4 text-center"></i> Non-Veg</span>
-                    </label>
-                    <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="radio" name="veg_type" value="vegan" {% if request.GET.veg_type == 'vegan' %}checked{% endif %} class="text-brand focus:ring-brand cursor-pointer">
-                        <span class="text-gray-600 text-sm group-hover:text-brand transition"><i class="fa-solid fa-seedling text-emerald-500 mr-1 w-4 text-center"></i> Vegan</span>
-                    </label>
-                </div>
-            </div>
-
-            <label class="flex items-center space-x-2 cursor-pointer bg-gray-50 p-3 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
-                <input type="checkbox" name="is_open" value="true" {% if request.GET.is_open == 'true' %}checked{% endif %} class="rounded text-brand focus:ring-brand h-4 w-4">
-                <span class="text-gray-700 text-sm font-medium">Show Open Only</span>
-            </label>
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                    Minimum Rating
-                </label>
-
-                <select name="min_rating"
-                    class="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-brand">
-                    <option value="">All Ratings</option>
-                    {% for rating in rating_choices %}
-                        <option value="{{ rating }}" {% if request.GET.min_rating == rating %}selected{% endif %}>{{ rating }} ★ & up</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Sort By</label>
-                <select name="sort" class="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-brand">
-                    <option value="">Default</option>
-                    <option value="cost_low" {% if request.GET.sort == 'cost_low' %}selected{% endif %}>Cost: Low to High</option>
-                    <option value="cost_high" {% if request.GET.sort == 'cost_high' %}selected{% endif %}>Cost: High to Low</option>
-                </select>
-            </div>
-
-            <button type="submit" class="w-full py-2.5 bg-brand text-white font-bold rounded-lg hover:bg-brand-dark transition shadow-lg shadow-brand/20">
-                Apply Filters
-            </button>
-        </form>
     </aside>
 
     <main class="flex-1 min-w-0 m-auto">
